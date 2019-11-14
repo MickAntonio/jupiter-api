@@ -29,7 +29,7 @@ class FeedBacksController extends Controller
             
             return response()->json([
                 'status'    => true,
-                'feed_backs' => FeedBacks::all()
+                'feed_backs' => FeedBacks::where('id', '>', 0)->with(['funcionario'])->orderBy('id', 'desc')->get()
             ]);
 
         } catch (\Exception $e) {
@@ -61,7 +61,7 @@ class FeedBacksController extends Controller
                 $feed_back->funcionario_id = $request->funcionario_id;
                 $feed_back->save();
 
-                return response()->json(['status' => true, 'message' => 'feed_back_adicionado_com_succeso', 'feed_back' => $feed_back], 200);
+                return response()->json(['status' => true, 'message' => 'feed_back_adicionado_com_succeso', 'feed_back' => FeedBacks::where('id', $feed_back->id)->with(['funcionario'])->get()], 200);
             }
 
         } catch (\Exception $e) {
@@ -82,7 +82,7 @@ class FeedBacksController extends Controller
             $feed_back = FeedBacks::find($id);
         
             if($feed_back!=null){
-                return response()->json(['status' => true, 'feed_back' => $feed_back], 200);
+                return response()->json(['status' => true, 'feed_back' => FeedBacks::where('id', $id)->with(['funcionario'])->get()], 200);
             }else{
                 return response()->json(['message' => 'feed_back_nao_encontrado'], 200);
             }
@@ -120,7 +120,7 @@ class FeedBacksController extends Controller
                     $feed_back->funcionario_id = $request->funcionario_id;
                     $feed_back->save();
 
-                    return response()->json(['status' => true, 'message' => 'feed_back_actualizada_com_succeso', 'feed_back' => $feed_back], 200);
+                    return response()->json(['status' => true, 'message' => 'feed_back_actualizada_com_succeso', 'feed_back' => FeedBacks::where('id', $id)->with(['funcionario'])->get()], 200);
 
                 }else{
                     return response()->json(['message' => 'feed_back_nao_encontrado'], 200);

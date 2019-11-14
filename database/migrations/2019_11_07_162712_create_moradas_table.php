@@ -20,9 +20,12 @@ class CreateMoradasTable extends Migration
             $table->string('bairro');
             $table->string('numero_casa');
             $table->unsignedInteger('municipio_id');
+            $table->unsignedInteger('funcionario_id');
             $table->timestamps();
 
             $table->foreign('municipio_id')->references('id')->on('municipios')->onDelete('cascade');
+            $table->foreign('funcionario_id')->references('id')->on('funcionarios')->onDelete('cascade');
+
 
         });
     }

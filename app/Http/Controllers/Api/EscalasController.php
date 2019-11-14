@@ -29,11 +29,11 @@ class EscalasController extends Controller
             
             return response()->json([
                 'status'    => true,
-                'escalas' => Escalas::all()
+                'escalas' => Escalas::where('id', '>', 0)->with(['mes'])->orderBy('id', 'desc')->get()
             ]);
 
         } catch (\Exception $e) {
-            return response()->json(['message' => 'nao_foi_possivel_trazer_escalas'], 500);
+            return response()->json(['status' => false, 'message' => 'nao_foi_possivel_trazer_escalas'], 500);
         }
     }
 
@@ -48,24 +48,24 @@ class EscalasController extends Controller
         try {
 
             $validator = Validator::make($request->all(), [
-                'mes'=>'required',
+                'mes_id'=>'required',
                 'ano'=>'required'
             ]);
 
             if($validator->fails()){
-                return response()->json(['status' => 'fail', 'message' => $validator->errors()->all()]);
+                return response()->json(['status' => false, 'message' => $validator->errors()->all()]);
             }else{
                 
                 $escala = new Escalas;
-                $escala->mes = $request->mes;
+                $escala->mes_id = $request->mes_id;
                 $escala->ano = $request->ano;
                 $escala->save();
 
-                return response()->json(['status' => true, 'message' => 'escala_adicionado_com_succeso', 'escala' => $escala], 200);
+                return response()->json(['status' => true, 'message' => 'escala_adicionado_com_succeso', 'escala' => $escala->where('id', $escala->id)->with(['mes'])->get() ], 200);
             }
 
         } catch (\Exception $e) {
-            return response()->json(['message' => 'nao_foi_possivel_adicionar_escala'], 500);
+            return response()->json(['message' => 'nao_foi_possivel_adicionar_escala', 'errors'=>$e], 500);
         }
     }
 
@@ -82,7 +82,7 @@ class EscalasController extends Controller
             $escala = Escalas::find($id);
         
             if($escala!=null){
-                return response()->json(['status' => true, 'escala' => $escala], 200);
+                return response()->json(['status' => true, 'escala' =>  $escala->where('id', $id)->with(['mes'])->get()], 200);
             }else{
                 return response()->json(['message' => 'escala_nao_encontrado'], 200);
             }
@@ -104,23 +104,23 @@ class EscalasController extends Controller
         try {
 
             $validator = Validator::make($request->all(), [
-                'mes'=>'required',
+                'mes_id'=>'required',
                 'ano'=>'required'
             ]);
 
             if($validator->fails()){
-                return response()->json(['status' => 'fail', 'message' => $validator->errors()->all()]);
+                return response()->json(['status' => false, 'message' => $validator->errors()->all()]);
             }else{
 
                 $escala = Escalas::find($id);
         
                 if($escala!=null){
                 
-                    $escala->mes = $request->mes;
+                    $escala->mes_id = $request->mes_id;
                     $escala->ano = $request->ano;
                     $escala->save();
 
-                    return response()->json(['status' => true, 'message' => 'escala_actualizada_com_succeso', 'escala' => $escala], 200);
+                    return response()->json(['status' => true, 'message' => 'escala_actualizada_com_succeso', 'escala' =>  $escala->where('id', $escala->id)->with(['mes'])->get() ], 200);
 
                 }else{
                     return response()->json(['message' => 'escala_nao_encontrado'], 200);
@@ -128,7 +128,7 @@ class EscalasController extends Controller
             }
             
         } catch (\Exception $e) {
-            return response()->json(['message' => 'nao_foi_possivel_adicionar_escala'], 500);
+            return response()->json(['message' => 'nao_foi_possivel_actualizar_escala', 'errors'=>$e], 500);
         }
     }
 

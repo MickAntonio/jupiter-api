@@ -176,7 +176,7 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         Barryvdh\Cors\ServiceProvider::class,
-
+        L5Swagger\L5SwaggerServiceProvider::class,
     ],
 
     /*

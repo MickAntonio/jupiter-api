@@ -29,11 +29,11 @@ class FuncionarioEscalaController extends Controller
             
             return response()->json([
                 'status'    => true,
-                'funcionarios_escalas' => FuncionarioEscala::all()
+                'funcionario_escala' => FuncionarioEscala::where('id', '>', 0)->with(['funcionario', 'escala'])->orderBy('id', 'desc')->get()
             ]);
 
         } catch (\Exception $e) {
-            return response()->json(['message' => 'nao_foi_possivel_trazer_funcionarios_escalas'], 500);
+            return response()->json(['message' => 'nao_foi_possivel_trazer_funcionarios_escalas', 'errors'=>$e], 500);
         }
     }
 
@@ -62,11 +62,14 @@ class FuncionarioEscalaController extends Controller
                 $funcionario_escala->dia = $request->dia;
                 $funcionario_escala->save();
 
-                return response()->json(['status' => true, 'message' => 'funcionario_escala_adicionado_com_succeso', 'funcionario_escala' => $funcionario_escala], 200);
+                return response()->json(
+                    ['status' => true, 'message' => 'funcionario_escala_adicionado_com_succeso', 'funcionario_escala' => 
+                        FuncionarioEscala::where('id', $funcionario_escala->id)->with(['funcionario', 'escala'])->get()
+                    ], 200);
             }
 
         } catch (\Exception $e) {
-            return response()->json(['message' => 'nao_foi_possivel_adicionar_funcionario_escala'], 500);
+            return response()->json(['status' => false, 'message' => 'nao_foi_possivel_adicionar_funcionario_escala', 'errors'=>$e], 500);
         }
     }
 
@@ -83,7 +86,7 @@ class FuncionarioEscalaController extends Controller
             $funcionario_escala = FuncionarioEscala::find($id);
         
             if($funcionario_escala!=null){
-                return response()->json(['status' => true, 'funcionario_escala' => $funcionario_escala], 200);
+                return response()->json(['status' => true, 'funcionario_escala' => FuncionarioEscala::where('id', $id)->with(['funcionario', 'escala'])->get()], 200);
             }else{
                 return response()->json(['message' => 'funcionario_escala_nao_encontrado'], 200);
             }
@@ -122,15 +125,18 @@ class FuncionarioEscalaController extends Controller
                     $funcionario_escala->dia = $request->dia;
                     $funcionario_escala->save();
 
-                    return response()->json(['status' => true, 'message' => 'funcionario_escala_actualizada_com_succeso', 'funcionario_escala' => $funcionario_escala], 200);
+                    return response()->json(
+                        ['status' => true, 'message' => 'funcionario_escala_actualizada_com_succeso', 'funcionario_escala' => 
+                            FuncionarioEscala::where('id', $id)->with(['funcionario', 'escala'])->get()
+                        ], 200);
 
                 }else{
-                    return response()->json(['message' => 'funcionario_escala_nao_encontrado'], 200);
+                    return response()->json(['status' => true, 'message' => 'funcionario_escala_nao_encontrado'], 404);
                 }
             }
             
         } catch (\Exception $e) {
-            return response()->json(['message' => 'nao_foi_possivel_adicionar_funcionario_escala'], 500);
+            return response()->json(['status' => false, 'message' => 'nao_foi_possivel_adicionar_funcionario_escala'], 500);
         }
     }
 
@@ -150,11 +156,11 @@ class FuncionarioEscalaController extends Controller
                 $funcionario_escala->delete();
                 return response()->json(['status' => true, 'funcionario_escala' => 'funcionario_escala_excluido'], 200);
             }else{
-                return response()->json(['message' => 'funcionario_escala_nao_encontrada'], 200);
+                return response()->json(['status' => true, 'message' => 'funcionario_escala_nao_encontrada'], 404);
             }
             
         } catch (\Throwable $th) {
-            return response()->json(['message' => 'nao_foi_possivel_excluir_funcionario_escala'], 500);
+            return response()->json(['status' => false, 'message' => 'nao_foi_possivel_excluir_funcionario_escala'], 500);
         }
     }
 }

@@ -7,6 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class Vans extends Model
 {
     public function contactos(){
-        return $this->hasMany(VanContactos::class);
+        return $this->hasMany(VanContactos::class, 'van_id');
     }
 }

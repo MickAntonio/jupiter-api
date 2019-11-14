@@ -52,7 +52,7 @@ class MoradasController extends Controller
                 'cidade'=>'sometimes',
                 'bairro'=>'sometimes',
                 'numero_casa'=>'sometimes',
-                'municipio'=>'sometimes',
+                'municipio_id'=>'required',
             ]);
 
             if($validator->fails()){
@@ -61,10 +61,9 @@ class MoradasController extends Controller
                 
                 $morada = new Moradas;
                 $morada->rua    = $request->rua;
-                $morada->cidade = $request->cidade;
                 $morada->bairro = $request->bairro;
                 $morada->numero_casa = $request->numero_casa;
-                $morada->municipio   = $request->municipio;
+                $morada->municipio_id   = $request->municipio_id;
                 $morada->save();
 
                 return response()->json(['status' => true, 'message' => 'morada_adicionado_com_succeso', 'morada' => $morada], 200);

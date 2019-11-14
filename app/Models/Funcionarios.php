@@ -17,7 +17,7 @@ class Funcionarios extends Model
     }
 
     public function contactos(){
-        return $this->hasMany(FuncionarioContactos::class);
+        return $this->hasMany(FuncionarioContactos::class, 'funcionario_id');
     }
 
     public function escala(){
@@ -25,15 +25,15 @@ class Funcionarios extends Model
     }
 
     public function feed_backs(){
-        return $this->hasMany(FeedBacks::class);
+        return $this->hasMany(FeedBacks::class, 'funcionario_id');
     }
 
     public function morada(){
-        return $this->hasOne(Moradas::class);
+        return $this->hasOne(Moradas::class, 'funcionario_id');
     }
 
     public function localizacoes(){
-        return $this->hasMany(Localizacoes::class);
+        return $this->hasMany(Localizacoes::class, 'funcionario_id');
     }
 
 }

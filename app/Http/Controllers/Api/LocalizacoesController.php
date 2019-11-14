@@ -29,7 +29,7 @@ class LocalizacoesController extends Controller
             
             return response()->json([
                 'status'    => true,
-                'localizacoes' => Localizacoes::all()
+                'localizacoes' => Localizacoes::where('id', '>', 0)->with(['funcionario'])->orderBy('id', 'desc')->get()
             ]);
 
         } catch (\Exception $e) {
@@ -50,7 +50,7 @@ class LocalizacoesController extends Controller
             $validator = Validator::make($request->all(), [
                 'latitude'=>'required',
                 'longitude'=>'required',
-                'descricao'=>'required',
+                'descricao'=>'sometimes',
                 'funcionario_id'=>'required'
             ]);
 
@@ -65,7 +65,7 @@ class LocalizacoesController extends Controller
                 $localizacao->funcionario_id = $request->funcionario_id;
                 $localizacao->save();
 
-                return response()->json(['status' => true, 'message' => 'localizacao_adicionado_com_succeso', 'localizacao' => $localizacao], 200);
+                return response()->json(['status' => true, 'message' => 'localizacao_adicionado_com_succeso', 'localizacao' => Localizacoes::where('id', $localizacao->id)->with(['funcionario'])->get()], 200);
             }
 
         } catch (\Exception $e) {
@@ -86,7 +86,7 @@ class LocalizacoesController extends Controller
             $localizacao = Localizacoes::find($id);
         
             if($localizacao!=null){
-                return response()->json(['status' => true, 'localizacao' => $localizacao], 200);
+                return response()->json(['status' => true, 'localizacao' => Localizacoes::where('id', $localizacao->id)->with(['funcionario'])->get()], 200);
             }else{
                 return response()->json(['message' => 'localizacao_nao_encontrado'], 200);
             }
@@ -110,7 +110,7 @@ class LocalizacoesController extends Controller
             $validator = Validator::make($request->all(), [
                 'latitude'=>'required',
                 'longitude'=>'required',
-                'descricao'=>'required',
+                'descricao'=>'sometimes',
                 'funcionario_id'=>'required'
             ]);
 
@@ -128,7 +128,7 @@ class LocalizacoesController extends Controller
                     $localizacao->funcionario_id = $request->funcionario_id;
                     $localizacao->save();
 
-                    return response()->json(['status' => true, 'message' => 'localizacao_actualizada_com_succeso', 'localizacao' => $localizacao], 200);
+                    return response()->json(['status' => true, 'message' => 'localizacao_actualizada_com_succeso', 'localizacao' => Localizacoes::where('id', $localizacao->id)->with(['funcionario'])->get()], 200);
 
                 }else{
                     return response()->json(['message' => 'localizacao_nao_encontrado'], 200);

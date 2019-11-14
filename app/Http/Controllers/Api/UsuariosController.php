@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use JWTAuth;
 use App\User;
 use Validator;
 use Illuminate\Http\Request;
@@ -29,11 +30,11 @@ class UsuariosController extends Controller
             
             return response()->json([
                 'status'    => true,
-                'usuarios' => User::all()
+                'usuarios' => User::where('id', '>', 0)->with(['roles', 'permissions'])->orderBy('id', 'desc')->get()
             ]);
 
         } catch (\Exception $e) {
-            return response()->json(['message' => 'nao_foi_possivel_trazer_usuarios'], 500);
+            return response()->json(['message' => 'nao_foi_possivel_trazer_usuarios', 'errors'=>$e], 500);
         }
     }
 
@@ -63,11 +64,19 @@ class UsuariosController extends Controller
                 $usuario->password = bcrypt($request->password);
                 $usuario->save();
 
-                return response()->json(['status' => true, 'message' => 'usuario_adicionado_com_succeso', 'usuario' => $usuario], 200);
+                if($request->roles){
+                    $usuario->syncRoles($request->roles);
+                }
+        
+                if($request->permissions){
+                    $usuario->syncPermissions($request->permissions);
+                }
+
+                return response()->json(['status' => true, 'message' => 'usuario_adicionado_com_succeso', 'usuario' => User::where('id', $usuario->id)->with(['roles', 'permissions'])->get(), 'token_type' => 'bearer', 'token' => JWTAuth::fromUser($usuario)], 200);
             }
 
         } catch (\Exception $e) {
-            return response()->json(['message' => 'nao_foi_possivel_adicionar_usuario'], 500);
+            return response()->json(['message' => 'nao_foi_possivel_adicionar_usuario', 'errors'=>$e], 500);
         }
     }
 
@@ -84,9 +93,11 @@ class UsuariosController extends Controller
             $usuario = User::find($id);
         
             if($usuario!=null){
-                return response()->json(['status' => true, 'usuario' => $usuario], 200);
+                return response()->json(['status' => true, 'data' =>[ 
+                    'usuario' => User::where('id', $usuario->id)->with(['roles.permissions', 'permissions'])->get()
+                ]], 200);
             }else{
-                return response()->json(['message' => 'usuario_nao_encontrado'], 200);
+                return response()->json(['message' => 'usuario_nao_encontrado'], 404);
             }
 
         } catch (\Throwable $th) {
@@ -107,8 +118,8 @@ class UsuariosController extends Controller
 
             $validator = Validator::make($request->all(), [
                 'name' => 'required',
-                'email' => 'required | email | unique:users, email, '.$id,
-                'password' => 'required',
+                'email' => 'required|email|unique:users,email, '.$id,
+                'password' => 'sometimes|min:8',
             ]);
 
             if($validator->fails()){
@@ -119,14 +130,23 @@ class UsuariosController extends Controller
         
                 if($usuario!=null){
                 
-                    $usuario->telefone  = $request->telefone;
-                    $usuario->telemovel = $request->telemovel;
+                    $usuario->name = $request->name;
+                    $usuario->email = $request->email;
+
+                    if(isset($request->password)){
+                        $usuario->password = bcrypt($request->password);
+                    }
+
                     $usuario->save();
 
-                    return response()->json(['status' => true, 'message' => 'usuario_actualizado_com_succeso', 'usuario' => $usuario], 200);
+                    return response()->json(['status' => true, 'message' => 'usuario_actualizado_com_succeso', 
+                        'data' =>[ 
+                                'usuario' => User::where('id', $usuario->id)->with(['roles.permissions', 'permissions'])->get()
+                            ]
+                    ], 200);
 
                 }else{
-                    return response()->json(['message' => 'usuario_nao_encontrado'], 200);
+                    return response()->json(['message' => 'usuario_nao_encontrado'], 404);
                 }
             }
             

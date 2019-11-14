@@ -4,12 +4,13 @@ namespace App\Http\Controllers\Api;
 
 use Validator;
 use App\Models\Vans;
+use App\Models\VanContactos;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class VansController extends Controller
 {
-        /**
+    /**
      * Verify if user us authorization with JWT-AUTH
      *
      */
@@ -29,7 +30,7 @@ class VansController extends Controller
             
             return response()->json([
                 'status'    => true,
-                'vans' => Vans::all()
+                'vans' => Vans::where('id', '>', 0)->with(['contactos'])->orderBy('id', 'desc')->get()
             ]);
 
         } catch (\Exception $e) {
@@ -51,11 +52,11 @@ class VansController extends Controller
                 'matricula'=>'required',
                 'descricao'=>'sometimes',
                 'modelo'=>'required',
-                'marca'=>'required'
+                'marca'=>'sometimes'
             ]);
 
             if($validator->fails()){
-                return response()->json(['status' => 'fail', 'message' => $validator->errors()->all()]);
+                return response()->json(['status' => true, 'message' => $validator->errors()->all()]);
             }else{
                 
                 $van = new Vans;
@@ -65,11 +66,39 @@ class VansController extends Controller
                 $van->marca     = $request->marca;
                 $van->save();
 
-                return response()->json(['status' => true, 'message' => 'van_adicionado_com_succeso', 'van' => $van], 200);
+                /**
+                 * adiciona os contactos da van
+                 */
+
+                if($request->contactos){
+
+                    foreach ($request->contactos as $contacto) {
+
+                        $validator = Validator::make($contacto, [
+                            'contacto'=>'required',
+                            'tipo'=>'required'
+                        ]);
+
+                        if($validator->fails()){
+                            return response()->json(['status' => false, 'message' => $validator->errors()->all()]);
+                        }else{
+
+                            $van_contacto = new VanContactos;
+                            $van_contacto->contacto = $contacto['contacto'];
+                            $van_contacto->tipo     = $contacto['tipo'];
+                            $van_contacto->van_id   = $van->id;
+                            $van_contacto->save();
+
+                        }
+                    }
+                    
+                }
+
+                return response()->json(['status' => true, 'message' => 'van_adicionado_com_succeso', 'van' => $van::where('id', $van->id)->with(['contactos'])->get()], 200);
             }
 
         } catch (\Exception $e) {
-            return response()->json(['message' => 'nao_foi_possivel_adicionar_van'], 500);
+            return response()->json(['message' => 'nao_foi_possivel_adicionar_van', 'ERROS'=>$e], 500);
         }
     }
 
@@ -86,13 +115,13 @@ class VansController extends Controller
             $van = Vans::find($id);
         
             if($van!=null){
-                return response()->json(['status' => true, 'van' => $van], 200);
+                return response()->json(['status' => true, 'van' => $van::where('id', $van->id)->with(['contactos'])->get()], 200);
             }else{
-                return response()->json(['message' => 'van_nao_encontrado'], 200);
+                return response()->json(['status' => true, 'message' => 'van_nao_encontrado'], 404);
             }
 
         } catch (\Throwable $th) {
-            return response()->json(['message' => 'nao_foi_possivel_procurar_van'], 500);
+            return response()->json(['status' => false, 'message' => 'nao_foi_possivel_procurar_van'], 500);
         }
     }
 
@@ -115,26 +144,61 @@ class VansController extends Controller
             ]);
 
             if($validator->fails()){
-                return response()->json(['status' => 'fail', 'message' => $validator->errors()->all()]);
+                return response()->json(['status' => false, 'message' => $validator->errors()->all()]);
             }else{
 
                 $van = Vans::find($id);
         
                 if($van!=null){
                 
-                    $van->mes = $request->mes;
-                    $van->ano = $request->ano;
+                    $van->matricula = $request->matricula;
+                    $van->descricao = $request->descricao;
+                    $van->modelo = $request->modelo;
+                    $van->marca = $request->marca;
                     $van->save();
 
-                    return response()->json(['status' => true, 'message' => 'van_actualizada_com_succeso', 'van' => $van], 200);
+                    /**
+                     * adiciona os contactos da van
+                     */
+
+                    if($request->contactos){
+
+                        foreach ($request->contactos as $contacto) {
+
+                            $validator = Validator::make($contacto, [
+                                'contacto'=>'required',
+                                'tipo'=>'required'
+                            ]);
+
+                            if($validator->fails()){
+                                return response()->json(['status' => false, 'message' => $validator->errors()->all()]);
+                            }else{
+
+                                if(isset($contacto['id']) && VanContactos::find($contacto['id'])!=null ){
+                                    $van_contacto =  VanContactos::find($contacto['id']);
+                                }else{
+                                    $van_contacto = new VanContactos;
+                                }
+    
+                                $van_contacto->contacto = $contacto['contacto'];
+                                $van_contacto->tipo     = $contacto['tipo'];
+                                $van_contacto->van_id   = $van->id;
+                                $van_contacto->save();
+
+                            }
+                        }
+                        
+                    }
+
+                    return response()->json(['status' => true, 'message' => 'van_actualizada_com_succeso', 'van' => $van::where('id', $van->id)->with(['contactos'])->get()], 200);
 
                 }else{
-                    return response()->json(['message' => 'van_nao_encontrado'], 200);
+                    return response()->json(['status' => true, 'message' => 'van_nao_encontrado'], 404);
                 }
             }
             
         } catch (\Exception $e) {
-            return response()->json(['message' => 'nao_foi_possivel_adicionar_van'], 500);
+            return response()->json(['status' => false, 'message' => 'nao_foi_possivel_actualizar_van', 'errors'=>$e], 500);
         }
     }
 
