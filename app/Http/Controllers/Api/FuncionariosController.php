@@ -33,7 +33,9 @@ class FuncionariosController extends Controller
             
             return response()->json([
                 'status'    => true,
-                'funcionarios' => Funcionarios::where('id', '>', 0)->with(['usuario', 'contactos', 'morada'])->orderBy('id', 'desc')->get()
+                'data'=>[
+                    'funcionarios' => Funcionarios::where('id', '>', 0)->with(['usuario', 'contactos', 'morada'])->orderBy('id', 'desc')->get()
+                ]
             ]);
 
         } catch (\Exception $e) {
@@ -159,7 +161,10 @@ class FuncionariosController extends Controller
                     
                 }
 
-                return response()->json(['status' => true, 'message' => 'funcionario_adicionado_com_succeso', 'fucionario' => Funcionarios::where('id', $funcionario->id)->with(['usuario', 'contactos', 'morada'])->get() ], 200);
+                return response()->json(['status' => true, 'message' => 'funcionario_adicionado_com_succeso', 'data'=>[
+                    'fucionario' => Funcionarios::where('id', $funcionario->id)->with(['usuario', 'contactos', 'morada'])->get() 
+                    ]
+                ], 200);
             }
 
         } catch (\Exception $e) {
@@ -180,7 +185,7 @@ class FuncionariosController extends Controller
             $funcionario = Funcionarios::where('id', $id)->with(['usuario', 'contactos'])->get();
 
             if($funcionario!=null){
-                return response()->json(['status' => true, 'funcionario' => $funcionario], 200);
+                return response()->json(['status' => true, 'data'=>['funcionario' => $funcionario]], 200);
             }else{
                 return response()->json(['message' => 'funcionario_nao_encontrado'], 200);
             }
@@ -336,7 +341,11 @@ class FuncionariosController extends Controller
                     }
                 }
 
-                return response()->json(['status' => true, 'message' => 'funcionario_actualizada_com_succeso', 'fucionario' => Funcionarios::where('id', $funcionario->id)->with(['usuario', 'contactos', 'morada'])->get() ], 201);
+                return response()->json(['status' => true, 'message' => 'funcionario_actualizada_com_succeso', 
+                'data'=>[
+                    'fucionario' => Funcionarios::where('id', $funcionario->id)->with(['usuario', 'contactos', 'morada'])->get() 
+                    ]
+                ], 201);
             }
 
         } catch (\Exception $e) {
@@ -358,7 +367,7 @@ class FuncionariosController extends Controller
         
             if($funcionario!=null){
                 $funcionario->delete();
-                return response()->json(['status' => true, 'funcionario' => 'funcionario_excluido'], 200);
+                return response()->json(['status' => true, 'message' => 'funcionario_excluido'], 200);
             }else{
                 return response()->json(['message' => 'funcionario_nao_encontrada'], 404);
             }

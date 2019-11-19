@@ -30,7 +30,9 @@ class UsuariosController extends Controller
             
             return response()->json([
                 'status'    => true,
-                'usuarios' => User::where('id', '>', 0)->with(['roles', 'permissions'])->orderBy('id', 'desc')->get()
+                'data'=>[
+                    'usuarios' => User::where('id', '>', 0)->with(['roles', 'permissions'])->orderBy('id', 'desc')->get()
+                ]
             ]);
 
         } catch (\Exception $e) {
@@ -72,7 +74,11 @@ class UsuariosController extends Controller
                     $usuario->syncPermissions($request->permissions);
                 }
 
-                return response()->json(['status' => true, 'message' => 'usuario_adicionado_com_succeso', 'usuario' => User::where('id', $usuario->id)->with(['roles', 'permissions'])->get(), 'token_type' => 'bearer', 'token' => JWTAuth::fromUser($usuario)], 200);
+                return response()->json(['status' => true, 'message' => 'usuario_adicionado_com_succeso', 
+                'data'=>[
+                    'usuario' => User::where('id', $usuario->id)->with(['roles', 'permissions'])->get(), 'token_type' => 'bearer', 'token' => JWTAuth::fromUser($usuario)
+                    ]
+                ], 200);
             }
 
         } catch (\Exception $e) {
@@ -94,7 +100,9 @@ class UsuariosController extends Controller
         
             if($usuario!=null){
                 return response()->json(['status' => true, 'data' =>[ 
-                    'usuario' => User::where('id', $usuario->id)->with(['roles.permissions', 'permissions'])->get()
+                    'data'=>[
+                        'usuario' => User::where('id', $usuario->id)->with(['roles.permissions', 'permissions'])->get()
+                    ]
                 ]], 200);
             }else{
                 return response()->json(['message' => 'usuario_nao_encontrado'], 404);
@@ -118,7 +126,7 @@ class UsuariosController extends Controller
 
             $validator = Validator::make($request->all(), [
                 'name' => 'required',
-                'email' => 'required|email|unique:users,email, '.$id,
+                'email' => 'required|email|unique:users,email,'.$id,
                 'password' => 'sometimes|min:8',
             ]);
 
@@ -169,7 +177,7 @@ class UsuariosController extends Controller
         
             if($usuario!=null){
                 $usuario->delete();
-                return response()->json(['status' => true, 'usuario' => 'usuario_excluido'], 200);
+                return response()->json(['status' => true, 'message' => 'usuario_excluido'], 200);
             }else{
                 return response()->json(['message' => 'usuario_nao_encontrado'], 200);
             }

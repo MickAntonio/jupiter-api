@@ -29,7 +29,9 @@ class ContactosController extends Controller
             
             return response()->json([
                 'status'    => true,
-                'contactos' => Contactos::all()
+                'data'=>[
+                    'contactos' => Contactos::all()
+                ]
             ]);
 
         } catch (\Exception $e) {
@@ -61,7 +63,9 @@ class ContactosController extends Controller
                 $contacto->telemovel = $request->telemovel;
                 $contacto->save();
 
-                return response()->json(['status' => true, 'message' => 'contacto_adicionado_com_succeso', 'contacto' => $contacto], 200);
+                return response()->json(['status' => true, 'message' => 'contacto_adicionado_com_succeso', 
+                    'data'=>['contacto' => $contacto]
+                ], 200);
             }
 
         } catch (\Exception $e) {
@@ -82,7 +86,7 @@ class ContactosController extends Controller
             $contacto = Contactos::find($id);
         
             if($contacto!=null){
-                return response()->json(['status' => true, 'contacto' => $contacto], 200);
+                return response()->json(['status' => true, 'data'=>['contacto' => $contacto]], 200);
             }else{
                 return response()->json(['message' => 'contacto_nao_encontrado'], 200);
             }
@@ -120,7 +124,7 @@ class ContactosController extends Controller
                     $contacto->telemovel = $request->telemovel;
                     $contacto->save();
 
-                    return response()->json(['status' => true, 'message' => 'contacto_actualizado_com_succeso', 'contacto' => $contacto], 200);
+                    return response()->json(['status' => true, 'message' => 'contacto_actualizado_com_succeso', 'data'=>['contacto' => $contacto]], 200);
 
                 }else{
                     return response()->json(['message' => 'contacto_nao_encontrado'], 200);
@@ -146,7 +150,7 @@ class ContactosController extends Controller
         
             if($contacto!=null){
                 $contacto->delete();
-                return response()->json(['status' => true, 'contacto' => 'contacto_excluido'], 200);
+                return response()->json(['status' => true, 'message' => 'contacto_excluido'], 200);
             }else{
                 return response()->json(['message' => 'contacto_nao_encontrado'], 200);
             }

@@ -30,7 +30,9 @@ class VansController extends Controller
             
             return response()->json([
                 'status'    => true,
-                'vans' => Vans::where('id', '>', 0)->with(['contactos'])->orderBy('id', 'desc')->get()
+                'data'=>[
+                    'vans' => Vans::where('id', '>', 0)->with(['contactos'])->orderBy('id', 'desc')->get()
+                ]
             ]);
 
         } catch (\Exception $e) {
@@ -94,7 +96,11 @@ class VansController extends Controller
                     
                 }
 
-                return response()->json(['status' => true, 'message' => 'van_adicionado_com_succeso', 'van' => $van::where('id', $van->id)->with(['contactos'])->get()], 200);
+                return response()->json(['status' => true, 'message' => 'van_adicionado_com_succeso', 
+                    'data'=>[
+                        'van' => $van::where('id', $van->id)->with(['contactos'])->get()
+                        ]
+                    ], 200);
             }
 
         } catch (\Exception $e) {
@@ -190,7 +196,11 @@ class VansController extends Controller
                         
                     }
 
-                    return response()->json(['status' => true, 'message' => 'van_actualizada_com_succeso', 'van' => $van::where('id', $van->id)->with(['contactos'])->get()], 200);
+                    return response()->json(['status' => true, 'message' => 'van_actualizada_com_succeso', 
+                        'data'=>[
+                            'van' => $van::where('id', $van->id)->with(['contactos'])->get()
+                        ]
+                    ], 200);
 
                 }else{
                     return response()->json(['status' => true, 'message' => 'van_nao_encontrado'], 404);
@@ -216,9 +226,9 @@ class VansController extends Controller
         
             if($van!=null){
                 $van->delete();
-                return response()->json(['status' => true, 'van' => 'van_excluido'], 200);
+                return response()->json(['status' => true, 'message' => 'van_excluido'], 200);
             }else{
-                return response()->json(['message' => 'van_nao_encontrada'], 200);
+                return response()->json(['message' => 'van_nao_encontrada'], 404);
             }
             
         } catch (\Throwable $th) {

@@ -163,4 +163,35 @@ class FuncionarioEscalaController extends Controller
             return response()->json(['status' => false, 'message' => 'nao_foi_possivel_excluir_funcionario_escala'], 500);
         }
     }
+
+    
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\FuncionarioEscala  $funcionario_escala id
+     * @return \Illuminate\Http\Response
+     */
+    public function escala_do_dia()
+    {
+        try {
+
+            $funcionario_escala = FuncionarioEscala::whereHas('escala', function ($query) {
+                $query->where('mes_id', date('m'));
+                $query->where('ano', date('Year'));
+            })->where('dia',  date('d') )->with(['funcionario', 'escala'])->orderBy('id', 'desc')->get();
+
+            if($funcionario_escala!=null){
+                return response()->json(['status' => true, 'data'=> [
+                    'funcionario_escala' => $funcionario_escala
+                    ]
+                ]);
+            }else{
+                return response()->json(['status' => true, 'message' => 'nao_existe_escala_para_o_dia_'. date('d').'_'. date('m').'_'. date('Y')], 404);
+            }
+
+        } catch (\Throwable $th) {
+            return response()->json(['message' => 'nao_foi_possivel_procurar_escala_de_hoje'], 500);
+        }
+    }
+
 }

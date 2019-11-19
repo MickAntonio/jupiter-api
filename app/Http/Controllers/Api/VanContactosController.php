@@ -29,7 +29,9 @@ class VanContactosController extends Controller
             
             return response()->json([
                 'status'    => true,
-                'vans_contactos' => VanContactos::all()
+                'data'=>[
+                    'vans_contactos' => VanContactos::all()
+                ]
             ]);
 
         } catch (\Exception $e) {
@@ -61,7 +63,9 @@ class VanContactosController extends Controller
                 $van_contacto->van_id = $request->van_id;
                 $van_contacto->save();
 
-                return response()->json(['status' => true, 'message' => 'van_contacto_adicionado_com_succeso', 'van_contacto' => $van_contacto], 200);
+                return response()->json(['status' => true, 'message' => 'van_contacto_adicionado_com_succeso', 
+                    'data'=>['van_contacto' => $van_contacto]
+                ], 200);
             }
 
         } catch (\Exception $e) {
@@ -82,7 +86,7 @@ class VanContactosController extends Controller
             $van_contacto = VanContactos::find($id);
         
             if($van_contacto!=null){
-                return response()->json(['status' => true, 'van_contacto' => $van_contacto], 200);
+                return response()->json(['status' => true, 'data'=>['van_contacto' => $van_contacto]], 200);
             }else{
                 return response()->json(['message' => 'van_contacto_nao_encontrado'], 200);
             }
@@ -120,7 +124,7 @@ class VanContactosController extends Controller
                     $van_contacto->van_id = $request->van_id;
                     $van_contacto->save();
 
-                    return response()->json(['status' => true, 'message' => 'van_contacto_actualizada_com_succeso', 'van_contacto' => $van_contacto], 200);
+                    return response()->json(['status' => true, 'message' => 'van_contacto_actualizada_com_succeso', 'data'=>['van_contacto' => $van_contacto]], 200);
 
                 }else{
                     return response()->json(['message' => 'van_contacto_nao_encontrado'], 200);
@@ -146,7 +150,7 @@ class VanContactosController extends Controller
         
             if($van_contacto!=null){
                 $van_contacto->delete();
-                return response()->json(['status' => true, 'van_contacto' => 'van_contacto_excluido'], 200);
+                return response()->json(['status' => true, 'message' => 'van_contacto_excluido'], 200);
             }else{
                 return response()->json(['message' => 'van_contacto_nao_encontrada'], 200);
             }

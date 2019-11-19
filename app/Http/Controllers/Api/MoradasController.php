@@ -29,7 +29,9 @@ class MoradasController extends Controller
             
             return response()->json([
                 'status'    => true,
-                'moradas' => Moradas::all()
+                'data'=>[
+                    'moradas' => Moradas::all()
+                ]
             ]);
 
         } catch (\Exception $e) {
@@ -66,7 +68,9 @@ class MoradasController extends Controller
                 $morada->municipio_id   = $request->municipio_id;
                 $morada->save();
 
-                return response()->json(['status' => true, 'message' => 'morada_adicionado_com_succeso', 'morada' => $morada], 200);
+                return response()->json(['status' => true, 'message' => 'morada_adicionado_com_succeso', 
+                    'data'=>['morada' => $morada]
+                ], 200);
             }
 
         } catch (\Exception $e) {
@@ -87,7 +91,7 @@ class MoradasController extends Controller
             $morada = Moradas::find($id);
         
             if($morada!=null){
-                return response()->json(['status' => true, 'morada' => $morada], 200);
+                return response()->json(['status' => true, 'data'=>['morada' => $morada]], 200);
             }else{
                 return response()->json(['message' => 'morada_nao_encontrado'], 200);
             }
@@ -131,7 +135,7 @@ class MoradasController extends Controller
                     $morada->municipio   = $request->municipio;
                     $morada->save();
 
-                    return response()->json(['status' => true, 'message' => 'morada_actualizada_com_succeso', 'morada' => $morada], 200);
+                    return response()->json(['status' => true, 'message' => 'morada_actualizada_com_succeso', 'data'=>['morada' => $morada]], 200);
 
                 }else{
                     return response()->json(['message' => 'morada_nao_encontrado'], 200);
@@ -157,7 +161,7 @@ class MoradasController extends Controller
         
             if($morada!=null){
                 $morada->delete();
-                return response()->json(['status' => true, 'morada' => 'morada_excluido'], 200);
+                return response()->json(['status' => true, 'message' => 'morada_excluido'], 200);
             }else{
                 return response()->json(['message' => 'morada_nao_encontrada'], 200);
             }

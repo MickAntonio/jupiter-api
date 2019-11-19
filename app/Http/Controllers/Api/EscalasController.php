@@ -29,7 +29,9 @@ class EscalasController extends Controller
             
             return response()->json([
                 'status'    => true,
-                'escalas' => Escalas::where('id', '>', 0)->with(['mes'])->orderBy('id', 'desc')->get()
+                'data'=>[
+                    'escalas' => Escalas::where('id', '>', 0)->with(['mes'])->orderBy('id', 'desc')->get()
+                ]
             ]);
 
         } catch (\Exception $e) {
@@ -61,7 +63,9 @@ class EscalasController extends Controller
                 $escala->ano = $request->ano;
                 $escala->save();
 
-                return response()->json(['status' => true, 'message' => 'escala_adicionado_com_succeso', 'escala' => $escala->where('id', $escala->id)->with(['mes'])->get() ], 200);
+                return response()->json(['status' => true, 'message' => 'escala_adicionado_com_succeso', 
+                    'data'=>['escala' => $escala->where('id', $escala->id)->with(['mes'])->get() ]
+                ], 200);
             }
 
         } catch (\Exception $e) {
@@ -82,7 +86,10 @@ class EscalasController extends Controller
             $escala = Escalas::find($id);
         
             if($escala!=null){
-                return response()->json(['status' => true, 'escala' =>  $escala->where('id', $id)->with(['mes'])->get()], 200);
+                return response()->json(['status' => true, 'data'=>[
+                    'escala' =>  $escala->where('id', $id)->with(['mes'])->get()
+                    ]
+                ], 200);
             }else{
                 return response()->json(['message' => 'escala_nao_encontrado'], 200);
             }
@@ -120,7 +127,11 @@ class EscalasController extends Controller
                     $escala->ano = $request->ano;
                     $escala->save();
 
-                    return response()->json(['status' => true, 'message' => 'escala_actualizada_com_succeso', 'escala' =>  $escala->where('id', $escala->id)->with(['mes'])->get() ], 200);
+                    return response()->json(['status' => true, 'message' => 'escala_actualizada_com_succeso', 
+                    'data'=>[
+                        'escala' =>  $escala->where('id', $escala->id)->with(['mes'])->get() 
+                        ]
+                    ], 200);
 
                 }else{
                     return response()->json(['message' => 'escala_nao_encontrado'], 200);
@@ -146,7 +157,7 @@ class EscalasController extends Controller
         
             if($escala!=null){
                 $escala->delete();
-                return response()->json(['status' => true, 'escala' => 'escala_excluido'], 200);
+                return response()->json(['status' => true, 'message' => 'escala_excluido'], 200);
             }else{
                 return response()->json(['message' => 'escala_nao_encontrada'], 200);
             }
