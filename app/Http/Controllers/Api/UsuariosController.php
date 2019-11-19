@@ -59,10 +59,19 @@ class UsuariosController extends Controller
             if($validator->fails()){
                 return response()->json(['status' => 'fail', 'message' => $validator->errors()->all()]);
             }else{
+
+                // if (isset($request->image)) {
+                //     $file = $request->image;
+                //     unset($request->image);
+                //     $image_name = FileUploadController::fileUpload($file, 'uploads/students');
+                // }else{
+                //     $image_name = 'defualt.jpg';
+                // }
                 
                 $usuario = new User;
                 $usuario->name = $request->name;
                 $usuario->email = $request->email;
+                $usuario->image = $image_name;
                 $usuario->password = bcrypt($request->password);
                 $usuario->save();
 
@@ -137,6 +146,12 @@ class UsuariosController extends Controller
                 $usuario = User::find($id);
         
                 if($usuario!=null){
+
+                    // if (isset($request->image)) {
+                    //     $file = $request->image;
+                    //     unset($request->image);
+                    //     $image_name = FileUploadController::fileUpload($file, 'uploads/students');
+                    // }
                 
                     $usuario->name = $request->name;
                     $usuario->email = $request->email;

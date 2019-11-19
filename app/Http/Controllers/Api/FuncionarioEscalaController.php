@@ -126,8 +126,10 @@ class FuncionarioEscalaController extends Controller
                     $funcionario_escala->save();
 
                     return response()->json(
-                        ['status' => true, 'message' => 'funcionario_escala_actualizada_com_succeso', 'funcionario_escala' => 
-                            FuncionarioEscala::where('id', $id)->with(['funcionario', 'escala'])->get()
+                        ['status' => true, 'message' => 'funcionario_escala_actualizada_com_succeso', 'data'=>
+                            [ 'funcionario_escala' => 
+                                FuncionarioEscala::where('id', $id)->with(['funcionario', 'escala'])->get()
+                            ]
                         ], 200);
 
                 }else{
