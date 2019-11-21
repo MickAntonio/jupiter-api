@@ -19,6 +19,8 @@ class CreateVansTable extends Migration
             $table->string('descricao');
             $table->string('modelo');
             $table->string('marca');
+            $table->string('imagem');
+            $table->unsignedInteger('nr_ocupantes');
             $table->timestamps();
         });
     }

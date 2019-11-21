@@ -16,7 +16,6 @@ class CreateVanContactosTable extends Migration
         Schema::create('van_contactos', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('contacto');
-            $table->enum('tipo', ['telefone', 'telemovel', 'email', 'outro']);
             $table->unsignedInteger('van_id');
             $table->timestamps();
 

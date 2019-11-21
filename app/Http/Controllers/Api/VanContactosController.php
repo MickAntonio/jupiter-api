@@ -50,7 +50,7 @@ class VanContactosController extends Controller
         try {
 
             $validator = Validator::make($request->all(), [
-                'contacto_id'=>'required',
+                'contacto'=>'required',
                 'van_id'=>'required'
             ]);
 
@@ -59,7 +59,7 @@ class VanContactosController extends Controller
             }else{
                 
                 $van_contacto = new VanContactos;
-                $van_contacto->contacto_id = $request->contacto_id;
+                $van_contacto->contacto = $request->contacto;
                 $van_contacto->van_id = $request->van_id;
                 $van_contacto->save();
 
@@ -108,7 +108,7 @@ class VanContactosController extends Controller
         try {
 
             $validator = Validator::make($request->all(), [
-                'contacto_id'=>'required',
+                'contacto'=>'required',
                 'van_id'=>'required'
             ]);
 
@@ -120,7 +120,7 @@ class VanContactosController extends Controller
         
                 if($van_contacto!=null){
                 
-                    $van_contacto->contacto_id = $request->contacto_id;
+                    $van_contacto->contacto = $request->contacto;
                     $van_contacto->van_id = $request->van_id;
                     $van_contacto->save();
 

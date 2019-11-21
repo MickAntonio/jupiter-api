@@ -66,6 +66,8 @@ class VansController extends Controller
                 $van->descricao = $request->descricao;
                 $van->modelo    = $request->modelo;
                 $van->marca     = $request->marca;
+                $van->imagem       = $request->imagem;
+                $van->nr_ocupantes = $request->nr_ocupantes;
                 $van->save();
 
                 /**
@@ -77,8 +79,7 @@ class VansController extends Controller
                     foreach ($request->contactos as $contacto) {
 
                         $validator = Validator::make($contacto, [
-                            'contacto'=>'required',
-                            'tipo'=>'required'
+                            'contacto'=>'required'
                         ]);
 
                         if($validator->fails()){
@@ -87,7 +88,6 @@ class VansController extends Controller
 
                             $van_contacto = new VanContactos;
                             $van_contacto->contacto = $contacto['contacto'];
-                            $van_contacto->tipo     = $contacto['tipo'];
                             $van_contacto->van_id   = $van->id;
                             $van_contacto->save();
 
@@ -159,8 +159,10 @@ class VansController extends Controller
                 
                     $van->matricula = $request->matricula;
                     $van->descricao = $request->descricao;
-                    $van->modelo = $request->modelo;
-                    $van->marca = $request->marca;
+                    $van->modelo       = $request->modelo;
+                    $van->marca        = $request->marca;
+                    $van->imagem       = $request->imagem;
+                    $van->nr_ocupantes = $request->nr_ocupantes;
                     $van->save();
 
                     /**
@@ -172,8 +174,7 @@ class VansController extends Controller
                         foreach ($request->contactos as $contacto) {
 
                             $validator = Validator::make($contacto, [
-                                'contacto'=>'required',
-                                'tipo'=>'required'
+                                'contacto'=>'required'
                             ]);
 
                             if($validator->fails()){
@@ -187,7 +188,6 @@ class VansController extends Controller
                                 }
     
                                 $van_contacto->contacto = $contacto['contacto'];
-                                $van_contacto->tipo     = $contacto['tipo'];
                                 $van_contacto->van_id   = $van->id;
                                 $van_contacto->save();
 

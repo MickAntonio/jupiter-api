@@ -49,6 +49,7 @@ class FuncionarioContactoController extends Controller
 
             $validator = Validator::make($request->all(), [
                 'contacto'=>'required',
+                'tipo'=>'required',
                 'funcionario_id'=>'required'
             ]);
 
@@ -105,7 +106,8 @@ class FuncionarioContactoController extends Controller
         try {
 
             $validator = Validator::make($request->all(), [
-                'contacto_id'=>'required',
+                'contacto'=>'required',
+                'tipo'=>'required',
                 'funcionario_id'=>'required'
             ]);
 

@@ -29,7 +29,7 @@ class FuncionarioEscalaController extends Controller
             
             return response()->json([
                 'status'    => true,
-                'funcionario_escala' => FuncionarioEscala::where('id', '>', 0)->with(['funcionario', 'escala'])->orderBy('id', 'desc')->get()
+                'funcionario_escala' => FuncionarioEscala::where('id', '>', 0)->with(['funcionario.contactos', 'escala'])->orderBy('id', 'desc')->get()
             ]);
 
         } catch (\Exception $e) {
@@ -64,7 +64,7 @@ class FuncionarioEscalaController extends Controller
 
                 return response()->json(
                     ['status' => true, 'message' => 'funcionario_escala_adicionado_com_succeso', 'funcionario_escala' => 
-                        FuncionarioEscala::where('id', $funcionario_escala->id)->with(['funcionario', 'escala'])->get()
+                        FuncionarioEscala::where('id', $funcionario_escala->id)->with(['funcionario.contactos', 'escala'])->get()
                     ], 200);
             }
 
@@ -86,7 +86,7 @@ class FuncionarioEscalaController extends Controller
             $funcionario_escala = FuncionarioEscala::find($id);
         
             if($funcionario_escala!=null){
-                return response()->json(['status' => true, 'funcionario_escala' => FuncionarioEscala::where('id', $id)->with(['funcionario', 'escala'])->get()], 200);
+                return response()->json(['status' => true, 'funcionario_escala' => FuncionarioEscala::where('id', $id)->with(['funcionario.contactos', 'escala'])->get()], 200);
             }else{
                 return response()->json(['message' => 'funcionario_escala_nao_encontrado'], 200);
             }
@@ -128,7 +128,7 @@ class FuncionarioEscalaController extends Controller
                     return response()->json(
                         ['status' => true, 'message' => 'funcionario_escala_actualizada_com_succeso', 'data'=>
                             [ 'funcionario_escala' => 
-                                FuncionarioEscala::where('id', $id)->with(['funcionario', 'escala'])->get()
+                                FuncionarioEscala::where('id', $id)->with(['funcionario.contactos', 'escala'])->get()
                             ]
                         ], 200);
 
@@ -180,7 +180,7 @@ class FuncionarioEscalaController extends Controller
             $funcionario_escala = FuncionarioEscala::whereHas('escala', function ($query) {
                 $query->where('mes_id', date('m'));
                 $query->where('ano', date('Year'));
-            })->where('dia',  date('d') )->with(['funcionario', 'escala'])->orderBy('id', 'desc')->get();
+            })->where('dia',  date('d') )->with(['funcionario.contactos', 'escala'])->orderBy('id', 'desc')->get();
 
             if($funcionario_escala!=null){
                 return response()->json(['status' => true, 'data'=> [

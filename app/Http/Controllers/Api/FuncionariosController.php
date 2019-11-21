@@ -107,6 +107,7 @@ class FuncionariosController extends Controller
                 $funcionario->nacionalidade   = $request->nacionalidade;
                 $funcionario->genero          = $request->genero;
                 $funcionario->data_nascimento = $request->data_nascimento;
+                $funcionario->imagem          = $request->imagem;
                 $funcionario->usuario_id      = $usuario_id;
                 $funcionario->save();
 
@@ -277,6 +278,7 @@ class FuncionariosController extends Controller
                     $funcionario->nacionalidade   = $request->nacionalidade;
                     $funcionario->genero          = $request->genero;
                     $funcionario->data_nascimento = $request->data_nascimento;
+                    $funcionario->imagem          = $request->imagem;
                     $funcionario->save();
 
                 }else{
