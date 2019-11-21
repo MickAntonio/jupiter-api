@@ -80,7 +80,7 @@ Route::get('funcionarios-escalas/{id}',    'Api\FuncionarioEscalaController@show
 Route::put('funcionarios-escalas/{id}',    'Api\FuncionarioEscalaController@update');
 Route::delete('funcionarios-escalas/{id}', 'Api\FuncionarioEscalaController@destroy');
 
-Route::get('funcionarios-escalas/escala/dia', 'Api\FuncionarioEscalaController@escala_do_dia');
+Route::get('funcionarios-escalas/escala/dia/{id?}', 'Api\FuncionarioEscalaController@escala_do_dia');
 
 
 /**

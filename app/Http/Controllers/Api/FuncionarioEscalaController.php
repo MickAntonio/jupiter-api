@@ -9,6 +9,9 @@ use App\Http\Controllers\Controller;
 
 class FuncionarioEscalaController extends Controller
 {
+
+    private $dia=null;
+
     /**
      * Verify if user us authorization with JWT-AUTH
      *
@@ -173,14 +176,20 @@ class FuncionarioEscalaController extends Controller
      * @param  \App\Models\FuncionarioEscala  $funcionario_escala id
      * @return \Illuminate\Http\Response
      */
-    public function escala_do_dia()
+    public function escala_do_dia($dia = null)
     {
         try {
+
+            if(!is_null($dia)){
+                $this->dia = $dia;
+            }else{
+                $this->dia = date('d');
+            }
 
             $funcionario_escala = FuncionarioEscala::whereHas('escala', function ($query) {
                 $query->where('mes_id', date('m'));
                 $query->where('ano', date('Year'));
-            })->where('dia',  date('d') )->with(['funcionario.contactos', 'escala'])->orderBy('id', 'desc')->get();
+            })->where('dia',  $this->dia )->with(['funcionario.contactos', 'escala'])->orderBy('id', 'desc')->get();
 
             if($funcionario_escala!=null){
                 return response()->json(['status' => true, 'data'=> [
