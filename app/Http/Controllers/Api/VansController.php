@@ -53,8 +53,10 @@ class VansController extends Controller
             $validator = Validator::make($request->all(), [
                 'matricula'=>'required',
                 'descricao'=>'sometimes',
-                'modelo'=>'required',
-                'marca'=>'sometimes'
+                'modelo_id'=>'required',
+                'cor_id'=>'required',
+                'imagem'=>'required',
+                'nr_ocupantes'=>'sometimes'
             ]);
 
             if($validator->fails()){
@@ -64,8 +66,8 @@ class VansController extends Controller
                 $van = new Vans;
                 $van->matricula = $request->matricula;
                 $van->descricao = $request->descricao;
-                $van->modelo    = $request->modelo;
-                $van->marca     = $request->marca;
+                $van->modelo_id    = $request->modelo_id;
+                $van->cor_id       = $request->cor_id;
                 $van->imagem       = $request->imagem;
                 $van->nr_ocupantes = $request->nr_ocupantes;
                 $van->save();
@@ -145,8 +147,10 @@ class VansController extends Controller
             $validator = Validator::make($request->all(), [
                 'matricula'=>'required',
                 'descricao'=>'sometimes',
-                'modelo'=>'required',
-                'marca'=>'required'
+                'modelo_id'=>'required',
+                'cor_id'=>'required',
+                'imagem'=>'required',
+                'nr_ocupantes'=>'sometimes'
             ]);
 
             if($validator->fails()){
@@ -159,8 +163,8 @@ class VansController extends Controller
                 
                     $van->matricula = $request->matricula;
                     $van->descricao = $request->descricao;
-                    $van->modelo       = $request->modelo;
-                    $van->marca        = $request->marca;
+                    $van->modelo_id    = $request->modelo_id;
+                    $van->cor_id       = $request->cor_id;
                     $van->imagem       = $request->imagem;
                     $van->nr_ocupantes = $request->nr_ocupantes;
                     $van->save();

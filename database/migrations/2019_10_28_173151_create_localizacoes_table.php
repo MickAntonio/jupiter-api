@@ -17,7 +17,7 @@ class CreateLocalizacoesTable extends Migration
             $table->increments('id');
             $table->double('latitude');
             $table->double('longitude');
-            $table->string('descricao');
+            $table->string('descricao')->nullable();
             $table->unsignedInteger('funcionario_id');
             $table->timestamps();
 

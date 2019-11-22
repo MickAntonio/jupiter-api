@@ -58,7 +58,9 @@ class FuncionariosController extends Controller
                 'nome'=>'required',
                 'nacionalidade'=>'required',
                 'genero'=>'required',
-                'data_nascimento'=>'required'
+                'data_nascimento'=>'required',
+                'nr_bi'=>'required',
+                'nif'=>'sometimes'
             ]);
 
             if($validator->fails()){
@@ -108,6 +110,8 @@ class FuncionariosController extends Controller
                 $funcionario->genero          = $request->genero;
                 $funcionario->data_nascimento = $request->data_nascimento;
                 $funcionario->imagem          = $request->imagem;
+                $funcionario->nr_bi           = $request->nr_bi;
+                $funcionario->nif             = $request->nif;
                 $funcionario->usuario_id      = $usuario_id;
                 $funcionario->save();
 
@@ -211,7 +215,9 @@ class FuncionariosController extends Controller
                 'nome'=>'required',
                 'nacionalidade'=>'required',
                 'genero'=>'required',
-                'data_nascimento'=>'required'
+                'data_nascimento'=>'required',
+                'nr_bi'=>'required',
+                'nif'=>'sometimes'
             ]);
 
             if($validator->fails()){
@@ -278,6 +284,8 @@ class FuncionariosController extends Controller
                     $funcionario->nacionalidade   = $request->nacionalidade;
                     $funcionario->genero          = $request->genero;
                     $funcionario->data_nascimento = $request->data_nascimento;
+                    $funcionario->nr_bi           = $request->nr_bi;
+                    $funcionario->nif             = $request->nif;
                     $funcionario->imagem          = $request->imagem;
                     $funcionario->save();
 
@@ -376,6 +384,36 @@ class FuncionariosController extends Controller
             
         } catch (\Throwable $th) {
             return response()->json(['message' => 'nao_foi_possivel_excluir_funcionario'], 500);
+        }
+    }
+
+
+    /**
+     * Others respources
+     */
+
+    
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function motoristas()
+    {
+        try {
+            
+            $usuarios = User::whereRoleIs('Motorista')->pluck('id');
+
+            return response()->json([
+                'status'    => true,
+                'data'=>[
+                    'funcionarios' => Funcionarios::whereIn('usuario_id', $usuarios)->with(['usuario', 'contactos', 'morada'])->orderBy('id', 'desc')->get()
+                ]
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'nao_foi_possivel_trazer_funcionarios', 'errors'=>$e], 500);
         }
     }
 }

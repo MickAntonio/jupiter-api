@@ -49,6 +49,7 @@ Route::delete('contactos/{id}', 'Api\ContactosController@destroy');
  */
 Route::get('funcionarios',         'Api\FuncionariosController@index');
 Route::post('funcionarios',        'Api\FuncionariosController@store');
+Route::get('funcionarios/motoristas', 'Api\FuncionariosController@motoristas');
 Route::get('funcionarios/{id}',    'Api\FuncionariosController@show');
 Route::put('funcionarios/{id}',    'Api\FuncionariosController@update');
 Route::delete('funcionarios/{id}', 'Api\FuncionariosController@destroy');
@@ -107,3 +108,30 @@ Route::delete('localizacoes/{id}', 'Api\LocalizacoesController@destroy');
 
 Route::resource('permissoes', 'Api\Authorization\PermissionController');
 Route::resource('papeis', 'Api\Authorization\RoleController');
+
+/**
+ * Cores Routes
+ */
+Route::get('cores',         'Api\CoresController@index');
+Route::post('cores',        'Api\CoresController@store');
+Route::get('cores/{id}',    'Api\CoresController@show');
+Route::put('cores/{id}',    'Api\CoresController@update');
+Route::delete('cores/{id}', 'Api\CoresController@destroy');
+
+/**
+ * Marcas Routes
+ */
+Route::get('marcas',         'Api\MarcasController@index');
+Route::post('marcas',        'Api\MarcasController@store');
+Route::get('marcas/{id}',    'Api\MarcasController@show');
+Route::put('marcas/{id}',    'Api\MarcasController@update');
+Route::delete('marcas/{id}', 'Api\MarcasController@destroy');
+
+/**
+ * Marcas Routes
+ */
+Route::get('modelos',         'Api\ModelosController@index');
+Route::post('modelos',        'Api\ModelosController@store');
+Route::get('modelos/{id}',    'Api\ModelosController@show');
+Route::put('modelos/{id}',    'Api\ModelosController@update');
+Route::delete('modelos/{id}', 'Api\ModelosController@destroy');

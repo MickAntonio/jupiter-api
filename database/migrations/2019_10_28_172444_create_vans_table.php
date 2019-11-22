@@ -16,12 +16,17 @@ class CreateVansTable extends Migration
         Schema::create('vans', function (Blueprint $table) {
             $table->increments('id');
             $table->string('matricula');
-            $table->string('descricao');
-            $table->string('modelo');
-            $table->string('marca');
-            $table->string('imagem');
-            $table->unsignedInteger('nr_ocupantes');
+            $table->string('descricao')->nullable();
+            $table->unsignedInteger('modelo_id');
+            $table->unsignedInteger('cor_id')->nullable();
+            $table->string('imagem')->nullable();
+            $table->unsignedInteger('ano_aquisicao')->nullable();
+            $table->unsignedInteger('nr_ocupantes')->nullable();
             $table->timestamps();
+
+            $table->foreign('modelo_id')->references('id')->on('modelos')->onDelete('cascade');
+            $table->foreign('cor_id')->references('id')->on('cores')->onDelete('cascade');
+
         });
     }
 

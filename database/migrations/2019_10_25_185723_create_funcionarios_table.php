@@ -19,7 +19,9 @@ class CreateFuncionariosTable extends Migration
             $table->string('nacionalidade');
             $table->enum('genero', ['M', 'F']);
             $table->date('data_nascimento');
-            $table->string('imagem');
+            $table->string('imagem')->nullable();
+            $table->string('nif')->nullable();
+            $table->string('nr_bi')->nullable();
             $table->unsignedInteger('usuario_id');
             $table->timestamps();
 
