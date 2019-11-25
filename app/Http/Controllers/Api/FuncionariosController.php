@@ -309,7 +309,7 @@ class FuncionariosController extends Controller
                             return response()->json(['status' => false, 'message' => $validator->errors()->all()]);
                         }else{
 
-                            if(isset($contacto['id']) && FuncionarioContactos::find($contacto['id'])!=null ){
+                            if(isset($contacto['id'])){
                                 $funcionario_contacto =  FuncionarioContactos::find($contacto['id']);
                             }else{
                                 $funcionario_contacto = new FuncionarioContactos;
@@ -317,6 +317,7 @@ class FuncionariosController extends Controller
 
                             $funcionario_contacto->contacto = $contacto['contacto'];
                             $funcionario_contacto->tipo     = $contacto['tipo'];
+                            $funcionario_contacto->funcionario_id =  $funcionario->id;
                             $funcionario_contacto->save();
                         }
                     }
