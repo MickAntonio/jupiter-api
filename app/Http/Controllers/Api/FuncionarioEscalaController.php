@@ -18,7 +18,7 @@ class FuncionarioEscalaController extends Controller
      */
 
     public function __construct() {
-        $this->middleware('jwt-auth');
+        // $this->middleware('jwt-auth');
     }
 
     /**
@@ -199,6 +199,29 @@ class FuncionarioEscalaController extends Controller
             }else{
                 return response()->json(['status' => true, 'message' => 'nao_existe_escala_para_o_dia_'. date('d').'_'. date('m').'_'. date('Y')], 404);
             }
+
+        } catch (\Throwable $th) {
+            return response()->json(['message' => 'nao_foi_possivel_procurar_escala_de_hoje'], 500);
+        }
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\FuncionarioEscala  $funcionario_escala id
+     * @return \Illuminate\Http\Response
+     */
+    public function escala_da_semana()
+    {
+        try {
+
+            $week = date('W', strtotime('2019-11-18'));
+            $year = date('Y');
+
+            $from = date("Y-m-d", strtotime("{$year}-W{$week}+2")); //Returns the date of monday in week
+            $to = date("Y-m-d", strtotime("{$year}-W{$week}-6"));   //Returns the date of sunday in week
+        
+            return response()->json(['message' => ['from'=>$from, 'to'=>$to, 'week'=>$week]], 200);
 
         } catch (\Throwable $th) {
             return response()->json(['message' => 'nao_foi_possivel_procurar_escala_de_hoje'], 500);
