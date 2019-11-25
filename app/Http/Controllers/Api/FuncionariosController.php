@@ -269,8 +269,6 @@ class FuncionariosController extends Controller
                         return response()->json($usuario_not_found, 404);
                     }
 
-                }else{
-                    return response()->json(['status' => false, 'message' => 'informe_os_dados_de_usuario_ou_usuario_id'], 400);
                 }
 
                 /**

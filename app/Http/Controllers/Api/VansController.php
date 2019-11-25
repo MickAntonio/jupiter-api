@@ -31,7 +31,7 @@ class VansController extends Controller
             return response()->json([
                 'status'    => true,
                 'data'=>[
-                    'vans' => Vans::where('id', '>', 0)->with(['contactos'])->orderBy('id', 'desc')->get()
+                    'vans' => Vans::where('id', '>', 0)->with(['contactos', 'modelo.marca'])->orderBy('id', 'desc')->get()
                 ]
             ]);
 
@@ -56,7 +56,7 @@ class VansController extends Controller
                 'modelo_id'=>'required',
                 'cor_id'=>'required',
                 'imagem'=>'required',
-                'nr_ocupantes'=>'sometimes'
+                // 'nr_ocupantes'=>'sometimes'
             ]);
 
             if($validator->fails()){
@@ -69,7 +69,7 @@ class VansController extends Controller
                 $van->modelo_id    = $request->modelo_id;
                 $van->cor_id       = $request->cor_id;
                 $van->imagem       = $request->imagem;
-                $van->nr_ocupantes = $request->nr_ocupantes;
+                // $van->nr_ocupantes = $request->nr_ocupantes;
                 $van->save();
 
                 /**
@@ -100,7 +100,7 @@ class VansController extends Controller
 
                 return response()->json(['status' => true, 'message' => 'van_adicionado_com_succeso', 
                     'data'=>[
-                        'van' => $van::where('id', $van->id)->with(['contactos'])->get()
+                        'van' => $van::where('id', $van->id)->with(['contactos', 'modelo.marca'])->get()
                         ]
                     ], 200);
             }
@@ -123,7 +123,7 @@ class VansController extends Controller
             $van = Vans::find($id);
         
             if($van!=null){
-                return response()->json(['status' => true, 'van' => $van::where('id', $van->id)->with(['contactos'])->get()], 200);
+                return response()->json(['status' => true, 'van' => $van::where('id', $van->id)->with(['contactos', 'modelo.marca'])->get()], 200);
             }else{
                 return response()->json(['status' => true, 'message' => 'van_nao_encontrado'], 404);
             }
@@ -166,7 +166,7 @@ class VansController extends Controller
                     $van->modelo_id    = $request->modelo_id;
                     $van->cor_id       = $request->cor_id;
                     $van->imagem       = $request->imagem;
-                    $van->nr_ocupantes = $request->nr_ocupantes;
+                    // $van->nr_ocupantes = $request->nr_ocupantes;
                     $van->save();
 
                     /**
