@@ -82,7 +82,8 @@ Route::put('funcionarios-escalas/{id}',    'Api\FuncionarioEscalaController@upda
 Route::delete('funcionarios-escalas/{id}', 'Api\FuncionarioEscalaController@destroy');
 
 Route::get('funcionarios-escalas/escala/dia/{id?}', 'Api\FuncionarioEscalaController@escala_do_dia');
-Route::get('funcionarios-escalas/escala/semana', 'Api\FuncionarioEscalaController@escala_da_semana');
+Route::get('funcionarios-escalas/escala/semana/{date?}', 'Api\FuncionarioEscalaController@escala_semanal');
+Route::get('funcionarios-escalas/escala/mensal/{mes?}', 'Api\FuncionarioEscalaController@escala_mensal');
 
 
 /**

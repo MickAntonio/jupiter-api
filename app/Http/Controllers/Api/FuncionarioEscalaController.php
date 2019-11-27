@@ -11,6 +11,9 @@ class FuncionarioEscalaController extends Controller
 {
 
     private $dia=null;
+    private $semana=null;
+    private $mes=null;
+    private $ano=null;
 
     /**
      * Verify if user us authorization with JWT-AUTH
@@ -211,21 +214,100 @@ class FuncionarioEscalaController extends Controller
      * @param  \App\Models\FuncionarioEscala  $funcionario_escala id
      * @return \Illuminate\Http\Response
      */
-    public function escala_da_semana()
+    public function escala_semanal($date=null)
     {
         try {
 
-            $week = date('W', strtotime('2019-11-18'));
-            $year = date('Y');
+            if(!is_null($date)){
+                $this->mes = date('m', strtotime($date));
+                $this->ano = date('Y', strtotime($date));
+            }else{
+                $this->mes = date('m');
+                $this->ano = date('Y');
+            }
 
-            $from = date("Y-m-d", strtotime("{$year}-W{$week}+2")); //Returns the date of monday in week
-            $to = date("Y-m-d", strtotime("{$year}-W{$week}-6"));   //Returns the date of sunday in week
-        
-            return response()->json(['message' => ['from'=>$from, 'to'=>$to, 'week'=>$week]], 200);
+            $funcionario_escala = FuncionarioEscala::whereHas('escala', function ($query) {
+                $query->where('mes_id', date('m'));
+                $query->where('ano', date('Year'));
+            })->whereBetween('dia',  $this->days_of_week($date) )->with(['funcionario.contactos', 'escala'])->orderBy('id', 'desc')->get();
+
+            if($funcionario_escala!=null){
+                return response()->json(['status' => true, 'data'=> [
+                    'funcionario_escala' => $funcionario_escala
+                    ]
+                ]);
+            }else{
+                return response()->json(['status' => true, 'message' => 'nao_existe_escala_para_o_dia_'. date('d').'_'. date('m').'_'. date('Y')], 404);
+            }
 
         } catch (\Throwable $th) {
             return response()->json(['message' => 'nao_foi_possivel_procurar_escala_de_hoje'], 500);
         }
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\FuncionarioEscala  $funcionario_escala id
+     * @return \Illuminate\Http\Response
+     */
+    public function escala_mensal($mes=null)
+    {
+        try {
+
+            if(!is_null($mes)){
+                $this->mes = $mes;
+            }else{
+                $this->mes = date('m');
+            }
+
+            $funcionario_escala = FuncionarioEscala::whereHas('escala', function ($query) {
+                $query->where('mes_id', $this->mes);
+                $query->where('ano', date('Year'));
+            })->with(['funcionario.contactos', 'escala'])->orderBy('id', 'desc')->get();
+
+            if($funcionario_escala!=null){
+                return response()->json(['status' => true, 'data'=> [
+                    'funcionario_escala' => $funcionario_escala
+                    ]
+                ]);
+            }else{
+                return response()->json(['status' => true, 'message' => 'nao_existe_escala_para_o_dia_'. date('d').'_'. date('m').'_'. date('Y')], 404);
+            }
+
+        } catch (\Throwable $th) {
+            return response()->json(['message' => 'nao_foi_possivel_procurar_escala_de_hoje'], 500);
+        }
+    }
+
+
+
+    /**
+     * Help methods
+     */
+
+    public function days_of_week($date=null){
+
+        if(!is_null($date)){
+            $dia = date('d', strtotime($date))+1;
+            $mes = date('m', strtotime($date));
+            $ano = date('Y', strtotime($date));
+        }else{
+            $dia = date('d')+1;
+            $mes = date('m');
+            $ano = date('Y');
+        }
+
+        $date_week = $ano.'-'.$mes.'-'.$dia;
+
+        $week = date('W', strtotime($date_week));
+        $year = date('Y');
+
+        $from = date("Y-m-d", strtotime("{$year}-W{$week}+1")); 
+        $to = date("Y-m-d", strtotime("{$year}-W{$week}-6"));  
+
+        return [date('d', strtotime($from)), date('d', strtotime($to))];
+
     }
 
 }
