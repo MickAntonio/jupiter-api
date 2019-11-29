@@ -187,7 +187,7 @@ class FuncionariosController extends Controller
     {
         try {
 
-            $funcionario = Funcionarios::where('id', $id)->with(['usuario', 'contactos'])->get();
+            $funcionario = Funcionarios::where('id', $id)->with(['usuario', 'contactos', 'morada'])->get();
 
             if($funcionario!=null){
                 return response()->json(['status' => true, 'data'=>['funcionario' => $funcionario]], 200);
