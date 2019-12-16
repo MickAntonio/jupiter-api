@@ -35,7 +35,7 @@ class FuncionarioEscalaController extends Controller
             
             return response()->json([
                 'status'    => true,
-                'funcionario_escala' => FuncionarioEscala::where('id', '>', 0)->with(['funcionario.contactos', 'escala'])->orderBy('id', 'desc')->get()
+                'funcionario_escala' => FuncionarioEscala::where('id', '>', 0)->with(['funcionario.contactos', 'escala'])->orderBy('dia', 'asc')->get()
             ]);
 
         } catch (\Exception $e) {
@@ -192,7 +192,7 @@ class FuncionarioEscalaController extends Controller
             $funcionario_escala = FuncionarioEscala::whereHas('escala', function ($query) {
                 $query->where('mes_id', date('m'));
                 $query->where('ano', date('Year'));
-            })->where('dia',  $this->dia )->with(['funcionario.contactos', 'escala'])->orderBy('id', 'desc')->get();
+            })->where('dia',  $this->dia )->with(['funcionario.contactos', 'escala'])->orderBy('id', 'asc')->get();
 
             if($funcionario_escala!=null){
                 return response()->json(['status' => true, 'data'=> [
@@ -229,7 +229,7 @@ class FuncionarioEscalaController extends Controller
             $funcionario_escala = FuncionarioEscala::whereHas('escala', function ($query) {
                 $query->where('mes_id', date('m'));
                 $query->where('ano', date('Year'));
-            })->whereBetween('dia',  $this->days_of_week($date) )->with(['funcionario.contactos', 'escala'])->orderBy('id', 'desc')->get();
+            })->whereBetween('dia',  $this->days_of_week($date) )->with(['funcionario.contactos', 'escala'])->orderBy('dia', 'asc')->get();
 
             if($funcionario_escala!=null){
                 return response()->json(['status' => true, 'data'=> [
@@ -264,7 +264,7 @@ class FuncionarioEscalaController extends Controller
             $funcionario_escala = FuncionarioEscala::whereHas('escala', function ($query) {
                 $query->where('mes_id', $this->mes);
                 $query->where('ano', date('Year'));
-            })->with(['funcionario.contactos', 'escala'])->orderBy('id', 'desc')->get();
+            })->with(['funcionario.contactos', 'escala'])->orderBy('dia', 'asc')->get();
 
             if($funcionario_escala!=null){
                 return response()->json(['status' => true, 'data'=> [

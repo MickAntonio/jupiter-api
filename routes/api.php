@@ -38,11 +38,11 @@ Route::delete('usuarios/{id}', 'Api\UsuariosController@destroy');
 /**
  * Contactos Routes
  */
-Route::get('contactos',         'Api\ContactosController@index');
-Route::post('contactos',        'Api\ContactosController@store');
-Route::get('contactos/{id}',    'Api\ContactosController@show');
-Route::put('contactos/{id}',    'Api\ContactosController@update');
-Route::delete('contactos/{id}', 'Api\ContactosController@destroy');
+// Route::get('contactos',         'Api\ContactosController@index');
+// Route::post('contactos',        'Api\ContactosController@store');
+// Route::get('contactos/{id}',    'Api\ContactosController@show');
+// Route::put('contactos/{id}',    'Api\ContactosController@update');
+// Route::delete('contactos/{id}', 'Api\ContactosController@destroy');
 
 /**
  * Funcionarios Routes
@@ -103,6 +103,9 @@ Route::post('localizacoes',        'Api\LocalizacoesController@store');
 Route::get('localizacoes/{id}',    'Api\LocalizacoesController@show');
 Route::put('localizacoes/{id}',    'Api\LocalizacoesController@update');
 Route::delete('localizacoes/{id}', 'Api\LocalizacoesController@destroy');
+
+Route::get('enviar-localizacao',         'Api\LocalizacoesController@send');
+
 
 /**
  * Permissões

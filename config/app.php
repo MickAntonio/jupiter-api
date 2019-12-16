@@ -177,6 +177,7 @@ return [
 
         Barryvdh\Cors\ServiceProvider::class,
         L5Swagger\L5SwaggerServiceProvider::class,
+        Kreait\Laravel\Firebase\ServiceProvider::class,
     ],
 
     /*

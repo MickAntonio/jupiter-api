@@ -9,6 +9,7 @@ use App\Models\Funcionarios;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\FuncionarioContactos;
+use App\Http\Controllers\Api\FileUploadController;
 
 class FuncionariosController extends Controller
 {
@@ -109,10 +110,18 @@ class FuncionariosController extends Controller
                 $funcionario->nacionalidade   = $request->nacionalidade;
                 $funcionario->genero          = $request->genero;
                 $funcionario->data_nascimento = $request->data_nascimento;
-                $funcionario->imagem          = $request->imagem;
                 $funcionario->nr_bi           = $request->nr_bi;
                 $funcionario->nif             = $request->nif;
                 $funcionario->usuario_id      = $usuario_id;
+
+
+                if (isset($request->imagem)) {
+                    $file = $request->imagem;
+                    $funcionario->imagem = (new FileUploadController)->fileUpload($file, 'uploads/funcionarios');
+                }else{
+                    $funcionario->imagem  = 'default.jpg';
+                }
+
                 $funcionario->save();
 
                 /**
@@ -284,7 +293,12 @@ class FuncionariosController extends Controller
                     $funcionario->data_nascimento = $request->data_nascimento;
                     $funcionario->nr_bi           = $request->nr_bi;
                     $funcionario->nif             = $request->nif;
-                    $funcionario->imagem          = $request->imagem;
+                    
+                    if (isset($request->imagem)) {
+                        $file = $request->imagem;
+                        $funcionario->imagem = (new FileUploadController)->fileUpload($file, 'uploads/funcionarios');
+                    }
+                    
                     $funcionario->save();
 
                 }else{

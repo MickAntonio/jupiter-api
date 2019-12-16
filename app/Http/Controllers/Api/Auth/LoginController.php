@@ -13,7 +13,7 @@ use App\Http\Controllers\Controller;
 class LoginController extends Controller
 {
     public function __construct() {
-        $this->middleware('jwt-auth', ['except' => ['login']]);
+        $this->middleware('jwt-auth', ['except' => ['login', 'refresh']]);
     }
 
     /**
@@ -38,8 +38,9 @@ class LoginController extends Controller
         }
         $status = true;
         $token_type = 'bearer';
+        $expires_in = $this->guard()->factory()->getTTL() * 60;
         // all good so return the token
-        return response()->json(compact('status', 'token_type', 'token'));
+        return response()->json(compact('status', 'token_type', 'token', 'expires_in'));
         
     }
 
@@ -73,5 +74,32 @@ class LoginController extends Controller
     public function refresh()
     {
         return $this->respondWithToken(auth()->refresh());
+    }
+
+
+    /**
+     * Get the token array structure.
+     *
+     * @param  string $token
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function respondWithToken($token)
+    {
+        return response()->json([
+            'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => $this->guard()->factory()->getTTL() * 60
+        ]);
+    }
+
+    /**
+     * Get the guard to be used during authentication.
+     *
+     * @return \Illuminate\Contracts\Auth\Guard
+     */
+    public function guard()
+    {
+        return Auth::guard();
     }
 }

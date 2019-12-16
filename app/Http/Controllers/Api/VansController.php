@@ -7,6 +7,7 @@ use App\Models\Vans;
 use App\Models\VanContactos;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Api\FileUploadController;
 
 class VansController extends Controller
 {
@@ -70,6 +71,15 @@ class VansController extends Controller
                 $van->cor_id       = $request->cor_id;
                 $van->imagem       = $request->imagem;
                 // $van->nr_ocupantes = $request->nr_ocupantes;
+
+                if (isset($request->imagem)) {
+                    $file = $request->imagem;
+                    $van->imagem = (new FileUploadController)->fileUpload($file, 'uploads/vans');
+                }else{
+                    $van->imagem  = 'default.jpg';
+                }
+
+
                 $van->save();
 
                 /**
@@ -165,7 +175,10 @@ class VansController extends Controller
                     $van->descricao = $request->descricao;
                     $van->modelo_id    = $request->modelo_id;
                     $van->cor_id       = $request->cor_id;
-                    $van->imagem       = $request->imagem;
+                    if (isset($request->imagem)) {
+                        $file = $request->imagem;
+                        $van->imagem = (new FileUploadController)->fileUpload($file, 'uploads/vans');
+                    }
                     // $van->nr_ocupantes = $request->nr_ocupantes;
                     $van->save();
 
