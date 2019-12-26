@@ -56,7 +56,6 @@ class VansController extends Controller
                 'descricao'=>'sometimes',
                 'modelo_id'=>'required',
                 'cor_id'=>'required',
-                'imagem'=>'required',
                 // 'nr_ocupantes'=>'sometimes'
             ]);
 
@@ -69,16 +68,14 @@ class VansController extends Controller
                 $van->descricao = $request->descricao;
                 $van->modelo_id    = $request->modelo_id;
                 $van->cor_id       = $request->cor_id;
-                $van->imagem       = $request->imagem;
                 // $van->nr_ocupantes = $request->nr_ocupantes;
 
                 if (isset($request->imagem)) {
                     $file = $request->imagem;
-                    $van->imagem = (new FileUploadController)->fileUpload($file, 'uploads/vans');
+                    $van->imagem = (new FileUploadController)->fileUploadBase64($request->imagem, 'images/vans');
                 }else{
                     $van->imagem  = 'default.jpg';
                 }
-
 
                 $van->save();
 
@@ -176,8 +173,7 @@ class VansController extends Controller
                     $van->modelo_id    = $request->modelo_id;
                     $van->cor_id       = $request->cor_id;
                     if (isset($request->imagem)) {
-                        $file = $request->imagem;
-                        $van->imagem = (new FileUploadController)->fileUpload($file, 'uploads/vans');
+                        $van->imagem = (new FileUploadController)->fileUploadBase64($request->imagem, 'images/vans');
                     }
                     // $van->nr_ocupantes = $request->nr_ocupantes;
                     $van->save();
