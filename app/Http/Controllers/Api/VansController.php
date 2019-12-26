@@ -156,7 +156,6 @@ class VansController extends Controller
                 'descricao'=>'sometimes',
                 'modelo_id'=>'required',
                 'cor_id'=>'required',
-                'imagem'=>'required',
                 'nr_ocupantes'=>'sometimes'
             ]);
 
