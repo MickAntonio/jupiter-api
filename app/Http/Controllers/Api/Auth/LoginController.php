@@ -39,8 +39,9 @@ class LoginController extends Controller
         $status = true;
         $token_type = 'bearer';
         $expires_in = $this->guard()->factory()->getTTL() * 60;
+        $usuario = auth()->user();
         // all good so return the token
-        return response()->json(compact('status', 'token_type', 'token', 'expires_in'));
+        return response()->json(compact('status', 'token_type', 'token', 'expires_in', 'usuario'));
         
     }
 
