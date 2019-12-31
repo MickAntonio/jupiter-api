@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use Validator;
-use App\Models\FuncionarioEscala;
+use App\Models\Escalas;
 use Illuminate\Http\Request;
+use App\Models\FuncionarioEscala;
 use App\Http\Controllers\Controller;
 
 class FuncionarioEscalaController extends Controller
@@ -21,7 +22,7 @@ class FuncionarioEscalaController extends Controller
      */
 
     public function __construct() {
-        $this->middleware('jwt-auth');
+        // $this->middleware('jwt-auth');
     }
 
     /**
@@ -40,6 +41,87 @@ class FuncionarioEscalaController extends Controller
 
         } catch (\Exception $e) {
             return response()->json(['message' => 'nao_foi_possivel_trazer_funcionarios_escalas', 'errors'=>$e], 500);
+        }
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store_escala_automatica(Request $request)
+    {
+        try {
+
+            $validator = Validator::make($request->all(), [
+                'ano'=>'required',
+                'mes_id'=>'required',
+                'motoristas_por_dia'=>'required',
+                'funcionarios'=>'required'
+            ]);
+
+            if($validator->fails()){
+                return response()->json(['status' => 'fail', 'message' => $validator->errors()->all()]);
+            }else{
+
+                //motoristas por dia - 2
+                $motoristas_por_dia = $request->motoristas_por_dia;
+                // total de motoristas para este mes - 6
+                $total_motoristas = count($request->funcionarios);
+
+                if($motoristas_por_dia>$total_motoristas){
+                    return response()->json(['status' => 'fail', 'message' => 'motoristas_por_dia_maior_que_motoristas_selecionados']);
+                }
+
+                $escala = Escalas::where('ano', $request->ano)->where('mes_id', $request->mes_id)->first();
+
+                if(is_null($escala)){
+                    $escala = new Escalas;
+                    $escala->mes_id = $request->mes_id;
+                    $escala->ano    = $request->ano;
+                    $escala->save();
+                }
+
+                $t = 0;
+                $dia_inicio = 1;
+
+                foreach ($request->funcionarios as $id) {
+
+                    if($t < $motoristas_por_dia){
+
+                    }else{
+                        $t = 0;
+                        $dia_inicio++;
+                    }
+                
+                    $dia = $dia_inicio;
+
+                    while ($dia <= 31) {
+
+                        $funcionario_escala = new FuncionarioEscala;
+                        $funcionario_escala->funcionario_id = $id;
+                        $funcionario_escala->escala_id = $escala->id;
+                        $funcionario_escala->dia = $dia;
+                        $funcionario_escala->save();
+
+
+                        $dia = $dia + round( $total_motoristas / $motoristas_por_dia );
+
+                    }
+
+                    $t++;
+
+                }
+
+                return response()->json(
+                    ['status' => true, 'message' => 'funcionario_escala_adicionado_com_succeso', 'funcionario_escala' => 
+                        FuncionarioEscala::where('escala_id', $escala->id)->with(['funcionario.contactos', 'escala'])->get()
+                    ], 200);
+            }
+
+        } catch (\Exception $e) {
+            return response()->json(['status' => false, 'message' => 'nao_foi_possivel_adicionar_funcionario_escala', 'errors'=>$e], 500);
         }
     }
 
@@ -78,6 +160,7 @@ class FuncionarioEscalaController extends Controller
             return response()->json(['status' => false, 'message' => 'nao_foi_possivel_adicionar_funcionario_escala', 'errors'=>$e], 500);
         }
     }
+
 
     /**
      * Display the specified resource.
