@@ -55,11 +55,16 @@ class FuncionarioEscalaController extends Controller
         try {
 
             $validator = Validator::make($request->all(), [
-                'ano'=>'required',
                 'mes_id'=>'required',
                 'motoristas_por_dia'=>'required',
                 'funcionarios'=>'required'
             ]);
+
+            if(isset($request->ano)){
+                $ano = $request->ano;
+            }else{
+                $ano = date('Y');
+            }
 
             if($validator->fails()){
                 return response()->json(['status' => 'fail', 'message' => $validator->errors()->all()]);
@@ -74,12 +79,12 @@ class FuncionarioEscalaController extends Controller
                     return response()->json(['status' => 'fail', 'message' => 'motoristas_por_dia_maior_que_motoristas_selecionados']);
                 }
 
-                $escala = Escalas::where('ano', $request->ano)->where('mes_id', $request->mes_id)->first();
+                $escala = Escalas::where('ano', $ano)->where('mes_id', $request->mes_id)->first();
 
                 if(is_null($escala)){
                     $escala = new Escalas;
                     $escala->mes_id = $request->mes_id;
-                    $escala->ano    = $request->ano;
+                    $escala->ano    = $ano;
                     $escala->save();
                 }
 
@@ -103,8 +108,7 @@ class FuncionarioEscalaController extends Controller
                 
                     $dia = $dia_inicio;
 
-                    while ($dia <= cal_days_in_month(CAL_GREGORIAN, $request->mes_id, $request->ano)) {
-
+                    while ($dia <= cal_days_in_month(CAL_GREGORIAN, $request->mes_id, $ano)) {
 
                             $funcionario_escala = new FuncionarioEscala;
                             $funcionario_escala->funcionario_id = $id;
@@ -115,7 +119,6 @@ class FuncionarioEscalaController extends Controller
     
                             $dia = $dia + round( $total_motoristas / $motoristas_por_dia );
                         
-
                     }
 
                     $t++;
@@ -398,6 +401,26 @@ class FuncionarioEscalaController extends Controller
         $to = date("Y-m-d", strtotime("{$year}-W{$week}-6"));  
 
         return [date('d', strtotime($from)), date('d', strtotime($to))];
+
+    }
+
+    public function tem_escala($ano, $mes){
+
+        if(is_null($ano)){
+            $ano = date('Y');
+        }
+
+        $escala = Escalas::where('ano', $ano)->where('mes_id', $mes)->first();
+
+        if(!is_null($escala)){
+            $fun_escala = FuncionarioEscala::where('escala_id', $escala->id);
+            if(!is_null($fun_escala)){
+                return response()->json(['status' => true, 'tem_escala' => true]);
+            }
+        }
+
+        return response()->json(['status' => true, 'tem_escala' => false]);
+
 
     }
 

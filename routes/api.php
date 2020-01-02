@@ -86,6 +86,8 @@ Route::get('funcionarios-escalas/escala/semana/{date?}', 'Api\FuncionarioEscalaC
 Route::get('funcionarios-escalas/escala/mensal/{mes?}', 'Api\FuncionarioEscalaController@escala_mensal');
 
 Route::post('gerar-escala-automaticamente',        'Api\FuncionarioEscalaController@store_escala_automatica');
+Route::get('tem-escala/{ano?}/{mes}',        'Api\FuncionarioEscalaController@tem_escala');
+
 
 
 /**
