@@ -86,6 +86,12 @@ class FuncionarioEscalaController extends Controller
                 $t = 0;
                 $dia_inicio = 1;
 
+                $fun_escala = FuncionarioEscala::where('escala_id', $escala->id);
+
+                if(!is_null($fun_escala)){
+                    FuncionarioEscala::where('escala_id', $escala->id)->delete();
+                }
+
                 foreach ($request->funcionarios as $id) {
 
                     if($t < $motoristas_por_dia){
@@ -97,16 +103,18 @@ class FuncionarioEscalaController extends Controller
                 
                     $dia = $dia_inicio;
 
-                    while ($dia <= 31) {
-
-                        $funcionario_escala = new FuncionarioEscala;
-                        $funcionario_escala->funcionario_id = $id;
-                        $funcionario_escala->escala_id = $escala->id;
-                        $funcionario_escala->dia = $dia;
-                        $funcionario_escala->save();
+                    while ($dia <= cal_days_in_month(CAL_GREGORIAN, $request->mes_id, $request->ano)) {
 
 
-                        $dia = $dia + round( $total_motoristas / $motoristas_por_dia );
+                            $funcionario_escala = new FuncionarioEscala;
+                            $funcionario_escala->funcionario_id = $id;
+                            $funcionario_escala->escala_id = $escala->id;
+                            $funcionario_escala->dia = $dia;
+                            $funcionario_escala->save();
+    
+    
+                            $dia = $dia + round( $total_motoristas / $motoristas_por_dia );
+                        
 
                     }
 
