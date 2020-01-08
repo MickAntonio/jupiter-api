@@ -308,6 +308,47 @@ class FuncionarioEscalaController extends Controller
      * @param  \App\Models\FuncionarioEscala  $funcionario_escala id
      * @return \Illuminate\Http\Response
      */
+    public function escala_do_dia_data($date = null)
+    {
+        try {
+
+            if(!is_null($date)){
+                $this->dia = date('d', strtotime($date));
+                $this->mes = date('m', strtotime($date));
+                $this->ano = date('Y', strtotime($date));
+            }else{
+                $this->dia = date('d');
+                $this->mes = date('m');
+                $this->ano = date('Y');
+            }
+
+            $funcionario_escala = FuncionarioEscala::whereHas('escala', function ($query) {
+                $query->where('mes_id', $this->mes);
+                $query->where('ano', $this->ano);
+            })->where('dia',  $this->dia )->with(['funcionario.contactos', 'escala'])->orderBy('id', 'asc')->get();
+
+            if($funcionario_escala!=null){
+                return response()->json(['status' => true, 'data'=> [
+                    'funcionario_escala' => $funcionario_escala
+                    ]
+                ]);
+            }else{
+                return response()->json(['status' => true, 'message' => 'nao_existe_escala_para_o_dia_'. date('d').'_'. date('m').'_'. date('Y')], 404);
+            }
+
+        } catch (\Throwable $th) {
+            return response()->json(['message' => 'nao_foi_possivel_procurar_escala_de_hoje'], 500);
+        }
+    }
+
+
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\FuncionarioEscala  $funcionario_escala id
+     * @return \Illuminate\Http\Response
+     */
     public function escala_semanal($date=null)
     {
         try {
