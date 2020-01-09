@@ -63,6 +63,9 @@ Route::get('vans/{id}',    'Api\VansController@show');
 Route::put('vans/{id}',    'Api\VansController@update');
 Route::delete('vans/{id}', 'Api\VansController@destroy');
 
+Route::get('vans/matricula/{matricula}',    'Api\VansController@show_by_matricula');
+
+
 /**
  * Escala Routes
  */

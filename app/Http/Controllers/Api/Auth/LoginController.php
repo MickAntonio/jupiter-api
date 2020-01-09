@@ -6,9 +6,13 @@ use JWTAuth;
 use App\User;
 use Validator;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Tymon\JWTAuth\Exceptions\JWTException;
-use App\Http\Controllers\Controller;
+
+use Tymon\JWTAuth\Exceptions\TokenExpiredException;
+use Tymon\JWTAuth\Exceptions\TokenInvalidException;
+use Tymon\JWTAuth\Exceptions\TokenBlacklistedException;
 
 class LoginController extends Controller
 {
@@ -52,7 +56,8 @@ class LoginController extends Controller
      */
     public function me()
     {
-        return response()->json(auth()->user());
+        $usuario    = User::where('id', auth()->user()->id)->with(['funcionario','roles'])->first();
+        return response()->json($usuario);
     }
 
     /**
@@ -74,7 +79,13 @@ class LoginController extends Controller
      */
     public function refresh()
     {
-        return $this->respondWithToken(auth()->refresh());
+
+        try {
+            return $this->respondWithToken(auth()->refresh());
+        } catch (TokenBlacklistedException  $th) {
+            return response()->json(['message' => 'token_expired'], 404);
+        }
+
     }
 
 

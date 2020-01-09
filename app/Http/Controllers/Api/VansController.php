@@ -52,11 +52,12 @@ class VansController extends Controller
         try {
 
             $validator = Validator::make($request->all(), [
-                'matricula'=>'required',
+                'matricula'=>'required|unique:vans',
                 'descricao'=>'sometimes',
                 'modelo_id'=>'required',
                 'cor_id'=>'required',
-                // 'nr_ocupantes'=>'sometimes'
+                'ano_aquisicao'=>'sometimes',
+                'nr_ocupantes'=>'sometimes'
             ]);
 
             if($validator->fails()){
@@ -68,7 +69,8 @@ class VansController extends Controller
                 $van->descricao = $request->descricao;
                 $van->modelo_id    = $request->modelo_id;
                 $van->cor_id       = $request->cor_id;
-                // $van->nr_ocupantes = $request->nr_ocupantes;
+                $van->nr_ocupantes = $request->nr_ocupantes;
+                $van->ano_aquisicao = $request->ano_aquisicao;
 
                 if (isset($request->imagem)) {
                     $file = $request->imagem;
@@ -141,6 +143,29 @@ class VansController extends Controller
     }
 
     /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\Vans  $van id
+     * @return \Illuminate\Http\Response
+     */
+    public function show_by_matricula($matricula)
+    {
+        try {
+
+            $van = Vans::where('matricula', $matricula)->first();
+        
+            if($van!=null){
+                return response()->json(['status' => true, 'van' => $van::where('id', $van->id)->with(['contactos', 'modelo.marca'])->get()], 200);
+            }else{
+                return response()->json(['status' => true, 'message' => 'van_nao_encontrado'], 404);
+            }
+
+        } catch (\Throwable $th) {
+            return response()->json(['status' => false, 'message' => 'nao_foi_possivel_procurar_van'], 500);
+        }
+    }
+
+    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -152,11 +177,13 @@ class VansController extends Controller
         try {
 
             $validator = Validator::make($request->all(), [
-                'matricula'=>'required',
+                'matricula'=>'required|unique:vans,matricula,'.$id,
                 'descricao'=>'sometimes',
                 'modelo_id'=>'required',
                 'cor_id'=>'required',
+                'ano_aquisicao'=>'sometimes',
                 'nr_ocupantes'=>'sometimes'
+
             ]);
 
             if($validator->fails()){
@@ -171,10 +198,13 @@ class VansController extends Controller
                     $van->descricao = $request->descricao;
                     $van->modelo_id    = $request->modelo_id;
                     $van->cor_id       = $request->cor_id;
+                    $van->nr_ocupantes = $request->nr_ocupantes;
+                    $van->ano_aquisicao = $request->ano_aquisicao;
+
                     if (isset($request->imagem)) {
                         $van->imagem = (new FileUploadController)->fileUploadBase64($request->imagem, 'images/vans');
                     }
-                    // $van->nr_ocupantes = $request->nr_ocupantes;
+
                     $van->save();
 
                     /**

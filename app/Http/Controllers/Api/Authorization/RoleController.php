@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 
 class RoleController extends Controller
 {
+    
     /**
      * Verify if user us authorization with JWT-AUTH
      *

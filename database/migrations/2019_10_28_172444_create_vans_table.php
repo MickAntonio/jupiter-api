@@ -15,7 +15,7 @@ class CreateVansTable extends Migration
     {
         Schema::create('vans', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('matricula');
+            $table->string('matricula')->unique();
             $table->string('descricao')->nullable();
             $table->unsignedInteger('modelo_id');
             $table->unsignedInteger('cor_id')->nullable();
