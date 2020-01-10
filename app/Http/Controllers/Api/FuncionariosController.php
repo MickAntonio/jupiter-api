@@ -115,10 +115,10 @@ class FuncionariosController extends Controller
                 $funcionario->usuario_id      = $usuario_id;
 
                 if (isset($request->imagem)) {
-                    $file = $request->imagem;
-                    $funcionario->imagem = (new FileUploadController)->fileUploadBase64($request->imagem, 'funcionarios');
+                    $file_name = (new FileUploadController)->fileUploadBase64($request->imagem, 'funcionarios');
+                    $funcionario->imagem = '/uploads/funcionarios/' . $file_name;
                 }else{
-                    $funcionario->imagem  = 'default.jpg';
+                    $funcionario->imagem  = '/uploads/funcionarios/default.jpg';
                 }
 
                 $funcionario->save();
@@ -294,7 +294,8 @@ class FuncionariosController extends Controller
                     $funcionario->nif             = $request->nif;
                     
                     if (isset($request->imagem)) {
-                        $funcionario->imagem = (new FileUploadController)->fileUploadBase64($request->imagem, 'funcionarios');
+                        $file_name = (new FileUploadController)->fileUploadBase64($request->imagem, 'funcionarios');
+                        $funcionario->imagem = '/uploads/funcionarios/' . $file_name;
                     }
                     
                     $funcionario->save();
