@@ -177,7 +177,7 @@ return [
 
         Barryvdh\Cors\ServiceProvider::class,
         L5Swagger\L5SwaggerServiceProvider::class,
-        Barryvdh\DomPDF\ServiceProvider::class,
+        // Barryvdh\DomPDF\ServiceProvider::class,
     ],
 
     /*
