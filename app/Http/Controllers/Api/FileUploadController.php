@@ -27,7 +27,7 @@ class FileUploadController extends Controller {
         $file_name = substr(str_shuffle(str_repeat('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789',5)),0,10).'.'.$extenstion; //generating unique file name; 
 
         if($file_data!=""){ // storing image in storage/app/public Folder 
-            \Storage::disk('public')->put($destinationPath.'/'.$file_name,base64_decode($file_data)); 
+            \Storage::disk('public_uploads')->put($destinationPath.'/'.$file_name,base64_decode($file_data)); 
         } 
 
         return $file_name;

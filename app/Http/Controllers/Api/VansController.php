@@ -74,7 +74,7 @@ class VansController extends Controller
 
                 if (isset($request->imagem)) {
                     $file = $request->imagem;
-                    $van->imagem = (new FileUploadController)->fileUploadBase64($request->imagem, 'images/vans');
+                    $van->imagem = (new FileUploadController)->fileUploadBase64($request->imagem, 'vans');
                 }else{
                     $van->imagem  = 'default.jpg';
                 }
@@ -202,7 +202,7 @@ class VansController extends Controller
                     $van->ano_aquisicao = $request->ano_aquisicao;
 
                     if (isset($request->imagem)) {
-                        $van->imagem = (new FileUploadController)->fileUploadBase64($request->imagem, 'images/vans');
+                        $van->imagem = (new FileUploadController)->fileUploadBase64($request->imagem, 'vans');
                     }
 
                     $van->save();
