@@ -55,7 +55,7 @@ class EscalasController extends Controller
             ]);
 
             if($validator->fails()){
-                return response()->json(['status' => false, 'message' => $validator->errors()->all()]);
+                return response()->json(['status' => false, 'message' => $validator->errors()->all()], 400);
             }else{
                 
                 $escala = new Escalas;
@@ -69,7 +69,7 @@ class EscalasController extends Controller
             }
 
         } catch (\Exception $e) {
-            return response()->json(['message' => 'nao_foi_possivel_adicionar_escala', 'errors'=>$e], 500);
+            return response()->json(['status' => false, 'message' => 'nao_foi_possivel_adicionar_escala', 'errors'=>$e], 500);
         }
     }
 
@@ -91,11 +91,11 @@ class EscalasController extends Controller
                     ]
                 ], 200);
             }else{
-                return response()->json(['message' => 'escala_nao_encontrado'], 200);
+                return response()->json(['status' => false, 'message' => 'escala_nao_encontrado'], 404);
             }
 
         } catch (\Throwable $th) {
-            return response()->json(['message' => 'nao_foi_possivel_procurar_escala'], 500);
+            return response()->json(['status' => false, 'message' => 'nao_foi_possivel_procurar_escala'], 500);
         }
     }
 
@@ -116,7 +116,7 @@ class EscalasController extends Controller
             ]);
 
             if($validator->fails()){
-                return response()->json(['status' => false, 'message' => $validator->errors()->all()]);
+                return response()->json(['status' => false, 'message' => $validator->errors()->all()], 400);
             }else{
 
                 $escala = Escalas::find($id);
@@ -134,7 +134,7 @@ class EscalasController extends Controller
                     ], 200);
 
                 }else{
-                    return response()->json(['message' => 'escala_nao_encontrado'], 200);
+                    return response()->json(['status' => false, 'message' => 'escala_nao_encontrado'], 404);
                 }
             }
             
@@ -159,7 +159,7 @@ class EscalasController extends Controller
                 $escala->delete();
                 return response()->json(['status' => true, 'message' => 'escala_excluido'], 200);
             }else{
-                return response()->json(['message' => 'escala_nao_encontrada'], 200);
+                return response()->json(['status' => false, 'message' => 'escala_nao_encontrada'], 404);
             }
             
         } catch (\Throwable $th) {

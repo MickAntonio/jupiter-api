@@ -67,7 +67,7 @@ class FuncionarioEscalaController extends Controller
             }
 
             if($validator->fails()){
-                return response()->json(['status' => 'fail', 'message' => $validator->errors()->all()]);
+                return response()->json(['status' => false, 'message' => $validator->errors()->all()], 400);
             }else{
 
                 //motoristas por dia - 2
@@ -76,7 +76,7 @@ class FuncionarioEscalaController extends Controller
                 $total_motoristas = count($request->funcionarios);
 
                 if($motoristas_por_dia>$total_motoristas){
-                    return response()->json(['status' => 'fail', 'message' => 'motoristas_por_dia_maior_que_motoristas_selecionados']);
+                    return response()->json(['status' => false, 'message' => 'motoristas_por_dia_maior_que_motoristas_selecionados'], 400);
                 }
 
                 $escala = Escalas::where('ano', $ano)->where('mes_id', $request->mes_id)->first();
@@ -152,7 +152,7 @@ class FuncionarioEscalaController extends Controller
             ]);
 
             if($validator->fails()){
-                return response()->json(['status' => 'fail', 'message' => $validator->errors()->all()]);
+                return response()->json(['status' => false, 'message' => $validator->errors()->all()], 400);
             }else{
                 
                 $funcionario_escala = new FuncionarioEscala;
@@ -213,7 +213,7 @@ class FuncionarioEscalaController extends Controller
             ]);
 
             if($validator->fails()){
-                return response()->json(['status' => 'fail', 'message' => $validator->errors()->all()]);
+                return response()->json(['status' => false, 'message' => $validator->errors()->all()], 400);
             }else{
 
                 $funcionario_escala = FuncionarioEscala::find($id);
@@ -266,7 +266,6 @@ class FuncionarioEscalaController extends Controller
         }
     }
 
-    
     /**
      * Display the specified resource.
      *
@@ -294,7 +293,7 @@ class FuncionarioEscalaController extends Controller
                     ]
                 ]);
             }else{
-                return response()->json(['status' => true, 'message' => 'nao_existe_escala_para_o_dia_'. date('d').'_'. date('m').'_'. date('Y')], 404);
+                return response()->json(['status' => false, 'message' => 'nao_existe_escala_para_o_dia_'. date('d').'_'. date('m').'_'. date('Y')], 404);
             }
 
         } catch (\Throwable $th) {
@@ -333,7 +332,7 @@ class FuncionarioEscalaController extends Controller
                     ]
                 ]);
             }else{
-                return response()->json(['status' => true, 'message' => 'nao_existe_escala_para_o_dia_'. date('d').'_'. date('m').'_'. date('Y')], 404);
+                return response()->json(['status' => false, 'message' => 'nao_existe_escala_para_o_dia_'. date('d').'_'. date('m').'_'. date('Y')], 404);
             }
 
         } catch (\Throwable $th) {
@@ -372,11 +371,11 @@ class FuncionarioEscalaController extends Controller
                     ]
                 ]);
             }else{
-                return response()->json(['status' => true, 'message' => 'nao_existe_escala_para_o_dia_'. date('d').'_'. date('m').'_'. date('Y')], 404);
+                return response()->json(['status' => false, 'message' => 'nao_existe_escala_para_o_dia_'. date('d').'_'. date('m').'_'. date('Y')], 404);
             }
 
         } catch (\Throwable $th) {
-            return response()->json(['message' => 'nao_foi_possivel_procurar_escala_de_hoje'], 500);
+            return response()->json(['status' => false, 'message' => 'nao_foi_possivel_procurar_escala_de_hoje'], 500);
         }
     }
 

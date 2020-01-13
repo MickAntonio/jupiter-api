@@ -40,7 +40,7 @@ class FuncionariosController extends Controller
             ]);
 
         } catch (\Exception $e) {
-            return response()->json(['message' => 'nao_foi_possivel_trazer_funcionarios', 'errors'=>$e], 500);
+            return response()->json(['status'=> false, 'message' => 'nao_foi_possivel_trazer_funcionarios', 'errors'=>$e], 500);
         }
     }
 
@@ -65,7 +65,7 @@ class FuncionariosController extends Controller
             ]);
 
             if($validator->fails()){
-                return response()->json(['status' => 'fail', 'message' => $validator->errors()->all()]);
+                return response()->json(['status' => false, 'message' => $validator->errors()->all()], 400);
             }else{
 
                 /**
@@ -81,7 +81,7 @@ class FuncionariosController extends Controller
                     ]);
         
                     if($validator->fails()){
-                        return response()->json(['status' => 'fail', 'message' => $validator->errors()->all()]);
+                        return response()->json(['status' => false, 'message' => $validator->errors()->all()], 400);
                     }else{
 
                         $usuario = new User;
@@ -98,7 +98,7 @@ class FuncionariosController extends Controller
                     $usuario_id = $request->usuario_id;
 
                 }else{
-                    return response()->json(['status' => false, 'message' => 'informe_os_dados_de_usuario_ou_usuario_id'], 200);
+                    return response()->json(['status' => false, 'message' => 'informe_os_dados_de_usuario_ou_usuario_id'], 400);
                 }
 
                 /**
@@ -137,7 +137,7 @@ class FuncionariosController extends Controller
                         ]);
 
                         if($validator->fails()){
-                            return response()->json(['status' => false, 'message' => $validator->errors()->all()]);
+                            return response()->json(['status' => false, 'message' => $validator->errors()->all()], 400);
                         }else{
                             $funcionario_contacto = new FuncionarioContactos;
                             $funcionario_contacto->contacto = $contacto['contacto'];
@@ -161,7 +161,7 @@ class FuncionariosController extends Controller
                     ]);
 
                     if($validator->fails()){
-                        return response()->json(['status' => 'fail', 'message' => $validator->errors()->all()]);
+                        return response()->json(['status' => false, 'message' => $validator->errors()->all()], 400);
                     }else{
                         $morada = new Moradas;
                         $morada->rua    = $request->morada['rua'];
@@ -181,7 +181,7 @@ class FuncionariosController extends Controller
             }
 
         } catch (\Exception $e) {
-            return response()->json(['message' => 'nao_foi_possivel_adicionar_funcionario', 'errors'=>$e], 500);
+            return response()->json(['status'=>false, 'message' => 'nao_foi_possivel_adicionar_funcionario', 'errors'=>$e], 500);
         }
     }
 
@@ -200,11 +200,11 @@ class FuncionariosController extends Controller
             if($funcionario!=null){
                 return response()->json(['status' => true, 'data'=>['funcionario' => $funcionario]], 200);
             }else{
-                return response()->json(['message' => 'funcionario_nao_encontrado'], 200);
+                return response()->json(['status' => false, 'message' => 'funcionario_nao_encontrado'], 404);
             }
 
         } catch (\Throwable $e) {
-            return response()->json(['message' => 'nao_foi_possivel_procurar_funcionario', "erros"=>$e], 500);
+            return response()->json(['status' => false, 'message' => 'nao_foi_possivel_procurar_funcionario', "erros"=>$e], 500);
         }
     }
 
@@ -229,7 +229,7 @@ class FuncionariosController extends Controller
             ]);
 
             if($validator->fails()){
-                return response()->json(['status' => 'fail', 'message' => $validator->errors()->all()]);
+                return response()->json(['status' => false, 'message' => $validator->errors()->all()], 400);
             }else{
 
                 /**
@@ -252,7 +252,7 @@ class FuncionariosController extends Controller
                         ]);
             
                         if($validator->fails()){
-                            return response()->json(['status' => 'fail', 'message' => $validator->errors()->all()]);
+                            return response()->json(['status' => false, 'message' => $validator->errors()->all()], 400);
                         }else{
 
                             $usuario->name  = $request->usuario['name'];
@@ -345,7 +345,7 @@ class FuncionariosController extends Controller
                     ]);
 
                     if($validator->fails()){
-                        return response()->json(['status' => 'fail', 'message' => $validator->errors()->all()]);
+                        return response()->json(['status' => false, 'message' => $validator->errors()->all()], 400);
                     }else{
 
                         $morada = Moradas::where('funcionario_id', $funcionario->id)->first();
@@ -391,11 +391,11 @@ class FuncionariosController extends Controller
                 $funcionario->delete();
                 return response()->json(['status' => true, 'message' => 'funcionario_excluido'], 200);
             }else{
-                return response()->json(['message' => 'funcionario_nao_encontrada'], 404);
+                return response()->json(['status' => false, 'message' => 'funcionario_nao_encontrada'], 404);
             }
             
         } catch (\Throwable $th) {
-            return response()->json(['message' => 'nao_foi_possivel_excluir_funcionario'], 500);
+            return response()->json(['status' => false, 'message' => 'nao_foi_possivel_excluir_funcionario'], 500);
         }
     }
 
@@ -425,7 +425,7 @@ class FuncionariosController extends Controller
             ]);
 
         } catch (\Exception $e) {
-            return response()->json(['message' => 'nao_foi_possivel_trazer_funcionarios', 'errors'=>$e], 500);
+            return response()->json(['status' => true, 'message' => 'nao_foi_possivel_trazer_funcionarios', 'errors'=>$e], 500);
         }
     }
 }
