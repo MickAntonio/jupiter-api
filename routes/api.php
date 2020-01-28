@@ -54,6 +54,8 @@ Route::get('funcionarios/{id}',    'Api\FuncionariosController@show');
 Route::put('funcionarios/{id}',    'Api\FuncionariosController@update');
 Route::delete('funcionarios/{id}', 'Api\FuncionariosController@destroy');
 
+Route::get('funcionarios/escala/{funcionario}/{ano?}/{mes?}/{dia?}', 'Api\FuncionariosController@funcionario_escala');
+
 /**
  * Vans Routes
  */
@@ -91,6 +93,8 @@ Route::get('funcionarios-escalas/escala/mensal/{mes?}', 'Api\FuncionarioEscalaCo
 
 Route::post('gerar-escala-automaticamente',        'Api\FuncionarioEscalaController@store_escala_automatica');
 Route::get('tem-escala/{ano?}/{mes}',        'Api\FuncionarioEscalaController@tem_escala');
+
+
 
 
 
@@ -148,3 +152,21 @@ Route::post('modelos',        'Api\ModelosController@store');
 Route::get('modelos/{id}',    'Api\ModelosController@show');
 Route::put('modelos/{id}',    'Api\ModelosController@update');
 Route::delete('modelos/{id}', 'Api\ModelosController@destroy');
+
+/**
+ * Banner Routes
+ */
+Route::get('banners',         'Api\BannerController@index');
+Route::post('banners',        'Api\BannerController@store');
+Route::get('banners/{id}',    'Api\BannerController@show');
+Route::put('banners/{id}',    'Api\BannerController@update');
+Route::delete('banners/{id}', 'Api\BannerController@destroy');
+
+/**
+ * Viagens Routes
+ */
+Route::get('viagens',         'Api\ViagensController@index');
+Route::post('viagens',        'Api\ViagensController@store');
+Route::get('viagens/{id}',    'Api\ViagensController@show');
+Route::put('viagens/{id}',    'Api\ViagensController@update');
+Route::delete('viagens/{id}', 'Api\ViagensController@destroy');

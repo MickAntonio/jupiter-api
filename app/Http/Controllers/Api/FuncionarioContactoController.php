@@ -90,7 +90,7 @@ class FuncionarioContactoController extends Controller
             }
 
         } catch (\Throwable $th) {
-            return response()->json(['message' => 'nao_foi_possivel_procurar_funcionario_contacto'], 500);
+            return response()->json(['status'=> false, 'message' => 'nao_foi_possivel_procurar_funcionario_contacto'], 500);
         }
     }
 
@@ -126,12 +126,12 @@ class FuncionarioContactoController extends Controller
                     return response()->json(['status' => true, 'message' => 'funcionario_contacto_actualizada_com_succeso', 'funcionario_contacto' => $funcionario_contacto], 200);
 
                 }else{
-                    return response()->json(['message' => 'funcionario_contacto_nao_encontrado'], 200);
+                    return response()->json(['status'=> false, 'message' => 'funcionario_contacto_nao_encontrado'], 200);
                 }
             }
             
         } catch (\Exception $e) {
-            return response()->json(['message' => 'nao_foi_possivel_adicionar_funcionario_contacto'], 500);
+            return response()->json(['status'=> false, 'message' => 'nao_foi_possivel_adicionar_funcionario_contacto'], 500);
         }
     }
 

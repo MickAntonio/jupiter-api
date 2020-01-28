@@ -7,6 +7,7 @@ use Validator;
 use App\Models\Moradas;
 use App\Models\Funcionarios;
 use Illuminate\Http\Request;
+use App\Models\FuncionarioEscala;
 use App\Http\Controllers\Controller;
 use App\Models\FuncionarioContactos;
 use App\Http\Controllers\Api\FileUploadController;
@@ -426,6 +427,56 @@ class FuncionariosController extends Controller
 
         } catch (\Exception $e) {
             return response()->json(['status' => true, 'message' => 'nao_foi_possivel_trazer_funcionarios', 'errors'=>$e], 500);
+        }
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\FuncionarioEscala  $funcionario_escala id
+     * @return \Illuminate\Http\Response
+     */
+    public function funcionario_escala($funcionario, $ano = null, $mes=null, $dia=null)
+    {
+        try {
+
+            $funcionario_escala = FuncionarioEscala::where('funcionario_id',  $funcionario);
+
+            if(!is_null($ano)){
+
+                $this->ano = $ano;
+
+                $funcionario_escala = FuncionarioEscala::whereHas('escala', function ($query) {
+                    $query->where('ano', $this->ano);
+                });
+            }
+
+            if(!is_null($mes)){
+
+                $this->mes = $mes;
+
+                $funcionario_escala->whereHas('escala', function ($query) {
+                    $query->where('mes_id', $this->mes);
+                });  
+            }
+
+            if(!is_null($dia)){
+
+                $this->dia = $dia;
+                
+                $funcionario_escala->where('dia', $this->dia);
+            }
+
+            $funcionario_escala = $funcionario_escala->with(['escala'])->orderBy('id', 'asc')->get();
+
+            if($funcionario_escala!=null){
+                return response()->json(['status' => true, 'data'=> $funcionario_escala ]);
+            }else{
+                return response()->json(['status' => false, 'message' => 'nao_existe_escala_para_este_funcionario'], 404);
+            }
+
+        } catch (\Throwable $th) {
+            return response()->json(['status' => false, 'message' => 'nao_foi_possivel_procurar_escala_deste_funcionario', 'erro'=>$th], 500);
         }
     }
 }

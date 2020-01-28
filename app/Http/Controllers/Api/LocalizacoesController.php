@@ -7,11 +7,6 @@ use App\Models\Localizacoes;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-// use Kreait\Firebase;
-// use Kreait\Firebase\Factory;
-// use Kreait\Firebase\ServiceAccount;
-// use Kreait\Firebase\Messaging\CloudMessage;
-
 class LocalizacoesController extends Controller
 {
     /**
@@ -20,7 +15,7 @@ class LocalizacoesController extends Controller
      */
 
     public function __construct() {
-        // $this->middleware('jwt-auth');
+        $this->middleware('jwt-auth');
     }
 
     /**
@@ -181,40 +176,5 @@ class LocalizacoesController extends Controller
         }
     }
 
-
-
-    /**
-     * Notification with firebase push notifications
-     */
-
-    public function send()
-    {
-
-        // dd(openssl_get_cert_locations());
-
-        // dd(__DIR__.'/firebase_credentials.json');
-
-        // $factory = (new Factory())
-        //     ->withServiceAccount(__DIR__.'/firebase_credentials.json');
-
-        // $messaging = $factory->createMessaging();
-
-        // $deviceToken = 'AIzaSyBTdw3m2nPK_ExxIr-8fM_IG5IzjBXH694';
-
-        // // $message = CloudMessage::withTarget('token', $deviceToken)
-        // //     ->withNotification(['title'=>'iiwwi', 'body'=>'sss']) // optional
-        // //     ->withData([]) // optional
-        // // ;
-
-
-        // $message = CloudMessage::fromArray([
-        //     'token' => $deviceToken,
-        //     'notification' => [/* Notification data as array */], // optional
-        //     'data' => [/* data array */], // optional
-        // ]);
-
-        // $messaging->send($message);
-
-    }
-
+  
 }
