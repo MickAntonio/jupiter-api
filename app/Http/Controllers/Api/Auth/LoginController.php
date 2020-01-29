@@ -44,7 +44,7 @@ class LoginController extends Controller
         $token_type = 'bearer';
         $expires_in = $this->guard()->factory()->getTTL() * 60;
         // $usuario = auth()->user();
-        $usuario = User::where('id', auth()->user()->id)->with(['roles'])->first();
+        $usuario = User::where('id', auth()->user()->id)->with(['funcionario.contactos','roles'])->first();
         // all good so return the token
         return response()->json(['status'=>$status, 'token_type'=>$token_type, 'token'=>$token, 
         'expires_in'=>$expires_in, 'usuario'=>$usuario]);
