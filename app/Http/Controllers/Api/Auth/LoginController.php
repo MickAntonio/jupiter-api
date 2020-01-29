@@ -43,9 +43,11 @@ class LoginController extends Controller
         $status = true;
         $token_type = 'bearer';
         $expires_in = $this->guard()->factory()->getTTL() * 60;
-        $usuario = auth()->user();
+        // $usuario = auth()->user();
+        $usuario = User::where('id', auth()->user()->id)->with(['roles'])->first();
         // all good so return the token
-        return response()->json(compact('status', 'token_type', 'token', 'expires_in', 'usuario'));
+        return response()->json(['status'=>$status, 'token_type'=>$token_type, 'token'=>$token, 
+        'expires_in'=>$expires_in, 'usuario'=>$usuario]);
         
     }
 
