@@ -50,6 +50,7 @@ Route::delete('usuarios/{id}', 'Api\UsuariosController@destroy');
 Route::get('funcionarios',         'Api\FuncionariosController@index');
 Route::post('funcionarios',        'Api\FuncionariosController@store');
 Route::get('funcionarios/motoristas', 'Api\FuncionariosController@motoristas');
+Route::get('funcionarios/nao-motoristas', 'Api\FuncionariosController@nao_motoristas');
 Route::get('funcionarios/{id}',    'Api\FuncionariosController@show');
 Route::put('funcionarios/{id}',    'Api\FuncionariosController@update');
 Route::delete('funcionarios/{id}', 'Api\FuncionariosController@destroy');

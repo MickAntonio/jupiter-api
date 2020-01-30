@@ -431,6 +431,29 @@ class FuncionariosController extends Controller
     }
 
     /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function nao_motoristas()
+    {
+        try {
+            
+            $usuarios = User::whereRoleIs('Motorista')->pluck('id');
+
+            return response()->json([
+                'status'    => true,
+                'data'=>[
+                    'funcionarios' => Funcionarios::whereNotIn('usuario_id', $usuarios)->with(['usuario', 'contactos', 'morada'])->orderBy('id', 'desc')->get()
+                ]
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json(['status' => true, 'message' => 'nao_foi_possivel_trazer_funcionarios', 'errors'=>$e], 500);
+        }
+    }
+
+    /**
      * Display the specified resource.
      *
      * @param  \App\Models\FuncionarioEscala  $funcionario_escala id
