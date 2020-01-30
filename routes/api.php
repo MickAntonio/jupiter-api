@@ -171,3 +171,4 @@ Route::post('viagens',        'Api\ViagensController@store');
 Route::get('viagens/{id}',    'Api\ViagensController@show');
 Route::put('viagens/{id}',    'Api\ViagensController@update');
 Route::delete('viagens/{id}', 'Api\ViagensController@destroy');
+Route::get('viagens/usuario/logado', 'Api\ViagensController@show_by_usuario');

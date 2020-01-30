@@ -95,7 +95,7 @@ class FuncionariosController extends Controller
                             $usuario->syncRoles($request->usuario['roles']);
                         }
                 
-                        if(isse($request->usuario['permissions'])){
+                        if(isset($request->usuario['permissions'])){
                             $usuario->syncPermissions($request->usuario['permissions']);
                         }
 
@@ -184,7 +184,7 @@ class FuncionariosController extends Controller
                 }
 
                 return response()->json(['status' => true, 'message' => 'funcionario_adicionado_com_succeso', 'data'=>[
-                    'fucionario' => Funcionarios::where('id', $funcionario->id)->with(['usuario', 'contactos', 'morada'])->get() 
+                    'fucionario' => Funcionarios::where('id', $funcionario->id)->with(['usuario.roles', 'contactos', 'morada'])->get() 
                     ]
                 ], 200);
             }

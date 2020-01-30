@@ -71,7 +71,6 @@ class UsuariosController extends Controller
                 $usuario = new User;
                 $usuario->name = $request->name;
                 $usuario->email = $request->email;
-                $usuario->image = $image_name;
                 $usuario->password = bcrypt($request->password);
                 $usuario->save();
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use Validator;
 use App\Models\Viagens;
+use App\Models\Funcionarios;
 use Illuminate\Http\Request;
 use App\Models\ViagensEnderecos;
 use App\Http\Controllers\Controller;
@@ -167,6 +168,36 @@ class ViagensController extends Controller
                 return response()->json(['status' => true,
                     'data' => [
                         'viagem' => $this->modificar_estructura(Viagens::where('id', $viagem->id)->with(['motorista', 'usuario', 'van'])->first()),
+                    ],
+                ], 200);
+            } else {
+                return response()->json(['status' => false, 'message' => 'viagem_nao_encontrado'], 200);
+            }
+
+        } catch (\Throwable $th) {
+            return response()->json(['status' => false, 'message' => 'nao_foi_possivel_procurar_viagem'], 500);
+        }
+    }
+
+        /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\Localizacoes  $localizacao id
+     * @return \Illuminate\Http\Response
+     */
+    public function show_by_usuario()
+    {
+        try {
+
+            $funcionario = Funcionarios::where('usuario_id', auth()->user()->id)->first();
+
+            if ($funcionario != null) {
+
+               
+
+                return response()->json(['status' => true,
+                    'data' => [
+                        'viagem' => $this->modificar_lista(Viagens::where('usuario_id', $funcionario->id)->orWhere('motorista_id', $funcionario->id)->with(['motorista', 'usuario', 'van'])->get()),
                     ],
                 ], 200);
             } else {
