@@ -375,7 +375,7 @@ class FuncionarioEscalaController extends Controller
             }
 
         } catch (\Throwable $th) {
-            return response()->json(['status' => false, 'message' => 'nao_foi_possivel_procurar_escala_de_hoje'], 500);
+            return response()->json(['status' => false, 'message' => 'nao_foi_possivel_procurar_escala_de_hoje', 'error'=>$th], 500);
         }
     }
 
@@ -440,7 +440,16 @@ class FuncionarioEscalaController extends Controller
         $from = date("Y-m-d", strtotime("{$year}-W{$week}+1")); 
         $to = date("Y-m-d", strtotime("{$year}-W{$week}-6"));  
 
-        return [date('d', strtotime($from)), date('d', strtotime($to))];
+        $inicio =  $this->zero_remove(date('d', strtotime($from)));
+        $fim = $this->zero_remove(date('d', strtotime($to)));
+
+
+        if($inicio>$fim){
+            $fim = "". cal_days_in_month(CAL_GREGORIAN, $mes, $ano);
+        }
+
+
+        return [$inicio, $fim];
 
     }
 
@@ -462,6 +471,41 @@ class FuncionarioEscalaController extends Controller
         return response()->json(['status' => true, 'tem_escala' => false]);
 
 
+    }
+
+    public function zero_remove($texto){
+        switch ($texto) {
+            case '01':
+                return '1';
+                break;
+            case '02':
+                return '2';
+                break;
+            case '03':
+                return '3';
+                break;
+            case '04':
+                return '4';
+                break;
+            case '05':
+                return '5';
+                break;
+            case '06':
+                return '6';
+                break;
+            case '07':
+                return '7';
+                break;
+            case '08':
+                return '8';
+                break;
+            case '09':
+                    return '9';
+                    break;
+            default:
+                return $texto;
+                break;
+        }
     }
 
 }
