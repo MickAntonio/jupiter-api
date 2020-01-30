@@ -32,7 +32,7 @@ class ViagensController extends Controller
             return response()->json([
                 'status' => true,
                 'data' => [
-                    'viagens' => $this->modificar_lista(Viagens::where('id', '>', 0)->with(['motorista', 'usuario.funcionario', 'van'])->orderBy('id', 'desc')->get()),
+                    'viagens' => $this->modificar_lista(Viagens::where('id', '>', 0)->with(['motorista', 'usuario', 'van'])->orderBy('id', 'desc')->get()),
                 ],
             ]);
 
@@ -166,7 +166,7 @@ class ViagensController extends Controller
 
                 return response()->json(['status' => true,
                     'data' => [
-                        'viagem' => $this->modificar_estructura(Viagens::where('id', $viagem->id)->with(['motorista', 'usuario.funcionario', 'van'])->first()),
+                        'viagem' => $this->modificar_estructura(Viagens::where('id', $viagem->id)->with(['motorista', 'usuario', 'van'])->first()),
                     ],
                 ], 200);
             } else {

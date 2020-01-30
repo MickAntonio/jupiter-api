@@ -26,7 +26,7 @@ class CreateViagensTable extends Migration
             $table->boolean('viagem_terminada')->default(0);
             $table->timestamps();
 
-            $table->foreign('usuario_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('usuario_id')->references('id')->on('funcionarios')->onDelete('cascade');
             $table->foreign('motorista_id')->references('id')->on('funcionarios')->onDelete('cascade');
             $table->foreign('van_id')->references('id')->on('vans')->onDelete('cascade');
         });

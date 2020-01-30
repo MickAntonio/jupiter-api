@@ -91,6 +91,14 @@ class FuncionariosController extends Controller
                         $usuario->password = bcrypt($request['password']);
                         $usuario->save();
 
+                        if(isset($request->usuario['roles'])){
+                            $usuario->syncRoles($request->usuario['roles']);
+                        }
+                
+                        if(isse($request->usuario['permissions'])){
+                            $usuario->syncPermissions($request->usuario['permissions']);
+                        }
+
                         $usuario_id = $usuario->id;
                     }
 

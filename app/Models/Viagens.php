@@ -14,7 +14,7 @@ class Viagens extends Model
     }
 
     public function usuario(){
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Funcionarios::class);
     }
 
     public function van(){
