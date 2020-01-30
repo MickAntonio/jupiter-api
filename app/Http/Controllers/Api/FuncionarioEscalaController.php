@@ -365,6 +365,7 @@ class FuncionarioEscalaController extends Controller
                 $query->where('ano', date('Year'));
             })->whereBetween('dia',  $this->days_of_week($date) )->with(['funcionario.contactos', 'escala'])->orderBy('dia', 'asc')->get();
 
+
             if($funcionario_escala!=null){
                 return response()->json(['status' => true, 'data'=> [
                     'funcionario_escala' => $funcionario_escala
@@ -450,6 +451,41 @@ class FuncionarioEscalaController extends Controller
 
 
         return [$inicio, $fim];
+
+    }
+
+    public function mounth_days($date){
+
+        if(!is_null($date)){
+            $dia = date('d', strtotime($date))+1;
+            $mes = date('m', strtotime($date));
+            $ano = date('Y', strtotime($date));
+        }else{
+            $dia = date('d')+1;
+            $mes = date('m');
+            $ano = date('Y');
+        }
+
+        $date_week = $ano.'-'.$mes.'-'.$dia;
+
+        $week = date('W', strtotime($date_week));
+        $year = date('Y');
+
+        $from = date("Y-m-d", strtotime("{$year}-W{$week}+1")); 
+        $to = date("Y-m-d", strtotime("{$year}-W{$week}-6"));  
+
+        $inicio =  $this->zero_remove(date('d', strtotime($from)));
+        $fim = $this->zero_remove(date('d', strtotime($to)));
+
+
+        if($inicio>$fim){
+            $mes_2 =''.( $this->zero_remove($mes) + 1);
+        }else{
+            $mes_2 =''. $this->zero_remove($mes);
+        }
+
+
+        return [$this->zero_remove($mes), $mes_2];
 
     }
 
