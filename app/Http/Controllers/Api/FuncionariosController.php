@@ -58,10 +58,10 @@ class FuncionariosController extends Controller
 
             $validator = Validator::make($request->all(), [
                 'nome'=>'required',
-                'nacionalidade'=>'required',
+                'nacionalidade'=>'sometimes',
                 'genero'=>'required',
-                'data_nascimento'=>'required',
-                'nr_bi'=>'required',
+                'data_nascimento'=>'sometimes',
+                'nr_bi'=>'sometimes',
                 'nif'=>'sometimes'
             ]);
 
@@ -230,10 +230,10 @@ class FuncionariosController extends Controller
 
             $validator = Validator::make($request->all(), [
                 'nome'=>'required',
-                'nacionalidade'=>'required',
+                'nacionalidade'=>'sometimes',
                 'genero'=>'required',
-                'data_nascimento'=>'required',
-                'nr_bi'=>'required',
+                'data_nascimento'=>'sometimes',
+                'nr_bi'=>'sometimes',
                 'nif'=>'sometimes'
             ]);
 

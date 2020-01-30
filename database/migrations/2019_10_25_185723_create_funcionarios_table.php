@@ -16,9 +16,9 @@ class CreateFuncionariosTable extends Migration
         Schema::create('funcionarios', function (Blueprint $table) {
             $table->increments('id');
             $table->string('nome');
-            $table->string('nacionalidade');
+            $table->string('nacionalidade')->nullable();
             $table->enum('genero', ['M', 'F']);
-            $table->date('data_nascimento');
+            $table->date('data_nascimento')->nullable();
             $table->string('imagem')->nullable();
             $table->string('nif')->nullable();
             $table->string('nr_bi')->nullable();
