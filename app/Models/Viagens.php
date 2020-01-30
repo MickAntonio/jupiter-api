@@ -21,4 +21,8 @@ class Viagens extends Model
         return $this->belongsTo(Vans::class);
     }
 
+    public function motorista(){
+        return $this->belongsTo(Funcionarios::class);
+    }
+
 }
