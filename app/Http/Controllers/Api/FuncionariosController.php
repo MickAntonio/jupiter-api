@@ -88,7 +88,7 @@ class FuncionariosController extends Controller
                         $usuario = new User;
                         $usuario->name  = $request->usuario['name'];
                         $usuario->email = $request->usuario['email'];
-                        $usuario->password = bcrypt($request['password']);
+                        $usuario->password = bcrypt($request->usuario['password']);
                         $usuario->save();
 
                         if(isset($request->usuario['roles'])){
