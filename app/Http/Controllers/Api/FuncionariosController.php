@@ -32,6 +32,13 @@ class FuncionariosController extends Controller
     public function index()
     {
         try {
+
+            // $perPage = request('perPage', 10);
+            
+            // return response()->json([
+            //     'status'    => true,
+            //     'funcionarios' => Funcionarios::where('id', '>', 0)->with(['usuario', 'contactos', 'morada'])->orderBy('id', 'desc')->paginate($perPage)
+            // ]);
             
             return response()->json([
                 'status'    => true,

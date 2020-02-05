@@ -197,7 +197,7 @@ class ViagensController extends Controller
 
                 return response()->json(['status' => true,
                     'data' => [
-                        'viagem' => $this->modificar_lista(Viagens::where('usuario_id', $funcionario->id)->orWhere('motorista_id', $funcionario->id)->with(['motorista', 'usuario', 'van'])->get()),
+                        'viagens' => $this->modificar_lista(Viagens::where('usuario_id', $funcionario->id)->orWhere('motorista_id', $funcionario->id)->with(['motorista', 'usuario', 'van'])->get()),
                     ],
                 ], 200);
             } else {
