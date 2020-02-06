@@ -28,11 +28,39 @@ class VansController extends Controller
     public function index()
     {
         try {
+
+            $vans = Vans::where('id', '>', 0);
+
+            /**
+             * matricula
+             */
+           
+            if(request('matricula')){
+                $vans->where('matricula', 'like', '%'.request('matricula').'%');
+            }
+
+            if(request('descricao')){
+                $vans->where('descricao', 'like', '%'.request('descricao').'%');
+            }
+
+            if(request('anoAquisicao')){
+                $vans->where('ano_aquisicao', request('anoAquisicao'));
+            }
+
+            if(request('idModelo')){
+                $vans->where('modelo_id', request('idModelo'));
+            }
+
+            if(request('contacto')){
+                $vans->whereHas('contactos', function($contacto){
+                    $contacto->where('contacto', 'like', '%'.request('contacto').'%');
+                });
+            }
             
             return response()->json([
                 'status'    => true,
                 'data'=>[
-                    'vans' => Vans::where('id', '>', 0)->with(['contactos', 'modelo.marca'])->orderBy('id', 'desc')->get()
+                    'vans' => $vans->with(['contactos', 'modelo.marca'])->orderBy('id', 'desc')->get()
                 ]
             ]);
 

@@ -33,17 +33,38 @@ class FuncionariosController extends Controller
     {
         try {
 
-            // $perPage = request('perPage', 10);
-            
-            // return response()->json([
-            //     'status'    => true,
-            //     'funcionarios' => Funcionarios::where('id', '>', 0)->with(['usuario', 'contactos', 'morada'])->orderBy('id', 'desc')->paginate($perPage)
-            // ]);
+            $funcionarios = Funcionarios::where('id', '>', 0);
+
+            if(request('nome')){
+                $funcionarios->where('nome', 'like', '%'.request('nome').'%');
+            }
+
+            if(request('nr_bi')){
+                $funcionarios->where('nr_bi', 'like', '%'.request('nr_bi').'%');
+            }
+
+            if(request('email')){
+                $funcionarios->whereHas('usuario', function($usuario){
+                    $usuario->where('email', 'like', '%'.request('email').'%');
+                });
+            }
+
+            if(request('usuarioNome')){
+                $funcionarios->whereHas('usuario', function($usuario){
+                    $usuario->where('name', 'like', '%'.request('usuarioNome').'%');
+                });
+            }
+
+            if(request('contacto')){
+                $funcionarios->whereHas('contactos', function($contacto){
+                    $contacto->where('contacto', 'like', '%'.request('contacto').'%');
+                });
+            }
             
             return response()->json([
                 'status'    => true,
                 'data'=>[
-                    'funcionarios' => Funcionarios::where('id', '>', 0)->with(['usuario', 'contactos', 'morada'])->orderBy('id', 'desc')->get()
+                    'funcionarios' => $funcionarios->with(['usuario', 'contactos', 'morada'])->orderBy('id', 'desc')->get()
                 ]
             ]);
 
@@ -402,16 +423,25 @@ class FuncionariosController extends Controller
         try {
 
             $funcionario = Funcionarios::find($id);
+
+            $usuario = User::find($funcionario->usuario_id);
+        
+            
         
             if($funcionario!=null){
                 $funcionario->delete();
+
+                if($usuario!=null){
+                    $usuario->delete();
+                }
+
                 return response()->json(['status' => true, 'message' => 'funcionario_excluido'], 200);
             }else{
                 return response()->json(['status' => false, 'message' => 'funcionario_nao_encontrada'], 404);
             }
             
         } catch (\Throwable $th) {
-            return response()->json(['status' => false, 'message' => 'nao_foi_possivel_excluir_funcionario'], 500);
+            return response()->json(['status' => false, 'message' => 'nao_foi_possivel_excluir_funcionario', 'error'=>$th], 500);
         }
     }
 

@@ -172,3 +172,8 @@ Route::get('viagens/{id}',    'Api\ViagensController@show');
 Route::put('viagens/{id}',    'Api\ViagensController@update');
 Route::delete('viagens/{id}', 'Api\ViagensController@destroy');
 Route::get('viagens/usuario/logado', 'Api\ViagensController@show_by_usuario');
+
+/**
+ * Enderecos Routes
+ */
+Route::resource('enderecos',  'Api\EnderecosController', ['except'=>['create', 'edit']]);

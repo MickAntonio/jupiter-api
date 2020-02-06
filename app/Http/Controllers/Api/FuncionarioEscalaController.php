@@ -33,10 +33,49 @@ class FuncionarioEscalaController extends Controller
     public function index()
     {
         try {
-            
+
+            $escalas = FuncionarioEscala::where('id', '>', 0);
+
+            if(request('dia')){
+                $escalas->where('dia', request('dia'));
+            }
+
+            if(request('mes')){
+                $escalas->whereHas('escala', function($escala){
+                    $escala->where('mes_id', request('mes'));
+                });
+            }
+
+            if(request('ano')){
+                $escalas->whereHas('escala', function($escala){
+                    $escala->where('ano', request('ano'));
+                });
+            }
+
+            if(request('data')){
+
+                $this->dia = date('d', strtotime(request('data')));
+                $this->mes = date('m', strtotime(request('data')));
+                $this->ano = date('Y', strtotime(request('data')));
+
+                $escalas->whereHas('escala', function($escala){
+                    $escala->where('mes_id', $this->mes)->where('ano',  $this->ano);
+                })->where('dia', $this->dia);
+            }
+
+            if(request('idFuncionario')){
+                $escalas->where('funcionario_id', request('idFuncionario'));
+            }
+
+            if(request('nome')){
+                $escalas->whereHas('funcionario', function($funcionario){
+                    $funcionario->where('nome', 'like', '%'.request('nome').'%');
+                });
+            }
+
             return response()->json([
                 'status'    => true,
-                'funcionario_escala' => FuncionarioEscala::where('id', '>', 0)->with(['funcionario.contactos', 'escala'])->orderBy('dia', 'asc')->get()
+                'funcionario_escala' => $escalas->with(['funcionario.contactos', 'escala'])->orderBy('dia', 'asc')->get()
             ]);
 
         } catch (\Exception $e) {

@@ -11,6 +11,10 @@ use App\Http\Controllers\Controller;
 
 class ViagensController extends Controller
 {
+
+    private $data_inicio=null;
+    private $data_fim   =null;
+
     /**
      * Verify if user us authorization with JWT-AUTH
      *
@@ -30,10 +34,107 @@ class ViagensController extends Controller
     {
         try {
 
+
+            $viagens = Viagens::where('id', '>', 0);
+
+            /**
+             * Usuario Solicitante
+             */
+            if(request('nomeUsuario')){
+                $viagens->whereHas('usuario', function($usuario){
+                    $usuario->where('nome', 'like', '%'.request('nomeUsuario').'%');
+                });
+            }
+
+            if(request('idUsuario')){
+                $viagens->where('usuario_id', request('idUsuario'));
+            }
+
+            /**
+             * Usuario Motorista
+             */
+            if(request('nomeMotorista')){
+                $viagens->whereHas('motorista', function($motorista){
+                    $motorista->where('nome', 'like', '%'.request('nomeMotorista').'%');
+                });
+            }
+
+            if(request('idMotorista')){
+                $viagens->where('motorista_id', request('idMotorista'));
+            }
+
+            /**
+             * Avaliação
+             */
+           
+            if(request('avaliacao')){
+                $viagens->where('avaliacao', request('avaliacao'));
+            }
+
+            /**
+             * Enderecos: Latitude e Longitude
+             */
+            if(request('latitude')){
+                $viagens->whereHas('enderecos', function($enderecos){
+                    $enderecos->where('latitude', request('latitude'));
+                });
+            }
+
+            if(request('longitude')){
+                $viagens->whereHas('enderecos', function($enderecos){
+                    $enderecos->where('longitude', request('longitude'));
+                });
+            }
+
+            if(request('tipo')){
+                $viagens->whereHas('enderecos', function($enderecos){
+                    $enderecos->where('tipo', request('tipo'));
+                });
+            }
+
+            /**
+             * Van
+             */
+
+            if(request('nomeVan')){
+                $viagens->whereHas('van', function($van){
+                    $van->where('nome', '%'.request('nomeVan').'%');
+                });
+            }
+
+            if(request('matriculaVan')){
+                $viagens->whereHas('van', function($van){
+                    $van->where('matricula', '%'.request('matriculaVan').'%');
+                });
+            }
+
+            if(request('idVan')){
+                $viagens->where('van_id', request('idVan'));
+            }
+
+            /**
+             * Pesquisa por data e intervalo de datas
+             */
+            if(request('dataInicio') && request('dataFim')){
+
+                $this->data_inicio = date('Y-m-d', strtotime(request('dataInicio'))) . ' 00:00:00';
+                $this->data_fim    = date('Y-m-d', strtotime(request('dataFim'))) . ' 23:59:59';
+
+                $viagens->whereBetween('created_at', [$this->data_inicio, $this->data_fim]);
+
+            }
+
+            if(request('data')){
+
+                $viagens->whereDate('created_at', date('Y-m-d', strtotime(request('data'))));
+
+            }
+            
+
             return response()->json([
                 'status' => true,
                 'data' => [
-                    'viagens' => $this->modificar_lista(Viagens::where('id', '>', 0)->with(['motorista', 'usuario', 'van'])->orderBy('id', 'desc')->get()),
+                    'viagens' => $this->modificar_lista($viagens->with(['motorista', 'usuario', 'van'])->orderBy('id', 'desc')->get()),
                 ],
             ]);
 
@@ -201,7 +302,7 @@ class ViagensController extends Controller
                     ],
                 ], 200);
             } else {
-                return response()->json(['status' => false, 'message' => 'viagem_nao_encontrado'], 200);
+                return response()->json(['status' => false, 'message' => 'viagem_nao_encontrado', 'data' => ['viagens' =>[]]], 200);
             }
 
         } catch (\Throwable $th) {
