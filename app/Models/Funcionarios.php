@@ -36,4 +36,8 @@ class Funcionarios extends Model
         return $this->hasMany(Localizacoes::class, 'funcionario_id');
     }
 
+    public function viagens(){
+        return $this->hasMany(Viagens::class, 'motorista_id');
+    }
+
 }

@@ -8,6 +8,7 @@ use App\Models\Funcionarios;
 use Illuminate\Http\Request;
 use App\Models\ViagensEnderecos;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 
 class ViagensController extends Controller
 {
@@ -22,7 +23,7 @@ class ViagensController extends Controller
 
     public function __construct()
     {
-        // $this->middleware('jwt-auth');
+        $this->middleware('jwt-auth');
     }
 
     /**
@@ -134,7 +135,8 @@ class ViagensController extends Controller
             return response()->json([
                 'status' => true,
                 'data' => [
-                    'viagens' => $this->modificar_lista($viagens->with(['motorista', 'usuario', 'van'])->orderBy('id', 'desc')->get()),
+                    'viagens' => $viagens->with(['motorista', 'usuario', 'van'])->groupBy(DB::raw('Date(created_at)'))->orderBy('created_at', 'ASC')
+                    ->get(array(DB::raw('Date(created_at) as data'), DB::raw('id, usuario_id, motorista_id')))
                 ],
             ]);
 

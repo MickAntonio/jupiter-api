@@ -20,6 +20,7 @@ Route::post('login',    'Api\Auth\LoginController@login');
 Route::post('logout',   'Api\Auth\LoginController@logout');
 Route::post('refresh',  'Api\Auth\LoginController@refresh');
 Route::post('me',       'Api\Auth\LoginController@me');
+Route::get('me',       'Api\Auth\LoginController@me');
 // Route::post('register', 'Api\Auth\RegisterController@register');
 Route::post('sendPasswordResetLink', 'Api\Auth\ResetPasswordController@sendEmail');
 Route::post('resetPassword',         'Api\Auth\ChangePasswordController@process');
@@ -177,3 +178,6 @@ Route::get('viagens/usuario/logado', 'Api\ViagensController@show_by_usuario');
  * Enderecos Routes
  */
 Route::resource('enderecos',  'Api\EnderecosController', ['except'=>['create', 'edit']]);
+
+
+Route::get('dashboard',         'Api\DashboardController@index');
