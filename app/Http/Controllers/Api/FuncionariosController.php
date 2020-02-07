@@ -64,7 +64,7 @@ class FuncionariosController extends Controller
             return response()->json([
                 'status'    => true,
                 'data'=>[
-                    'funcionarios' => $funcionarios->with(['usuario', 'contactos', 'morada'])->orderBy('id', 'desc')->get()
+                    'funcionarios' => $funcionarios->with(['usuario.roles', 'contactos', 'morada'])->orderBy('id', 'desc')->get()
                 ]
             ]);
 
@@ -232,7 +232,7 @@ class FuncionariosController extends Controller
     {
         try {
 
-            $funcionario = Funcionarios::where('id', $id)->with(['usuario', 'contactos', 'morada'])->get();
+            $funcionario = Funcionarios::where('id', $id)->with(['usuario.roles', 'contactos', 'morada'])->get();
 
             if($funcionario!=null){
                 return response()->json(['status' => true, 'data'=>['funcionario' => $funcionario]], 200);
@@ -296,6 +296,15 @@ class FuncionariosController extends Controller
                             $usuario->email = $request->usuario['email'];
                             $usuario->password = bcrypt($request['password']);
                             $usuario->save();
+
+                            if(isset($request->usuario['roles'])){
+                                $usuario->syncRoles($request->usuario['roles']);
+                            }
+                    
+                            if(isset($request->usuario['permissions'])){
+                                $usuario->syncPermissions($request->usuario['permissions']);
+                            }
+    
 
                             $usuario_id = $usuario->id;
                         }
@@ -402,7 +411,7 @@ class FuncionariosController extends Controller
 
                 return response()->json(['status' => true, 'message' => 'funcionario_actualizada_com_succeso', 
                 'data'=>[
-                    'fucionario' => Funcionarios::where('id', $funcionario->id)->with(['usuario', 'contactos', 'morada'])->get() 
+                    'fucionario' => Funcionarios::where('id', $funcionario->id)->with(['usuario.roles', 'contactos', 'morada'])->get() 
                     ]
                 ], 201);
             }
@@ -461,7 +470,7 @@ class FuncionariosController extends Controller
     {
         try {
             
-            $usuarios = User::whereRoleIs('Motorista')->pluck('id');
+            $usuarios = User::whereRoleIs('motorista')->pluck('id');
 
             return response()->json([
                 'status'    => true,
@@ -484,7 +493,7 @@ class FuncionariosController extends Controller
     {
         try {
             
-            $usuarios = User::whereRoleIs('Motorista')->pluck('id');
+            $usuarios = User::whereRoleIs('motorista')->pluck('id');
 
             return response()->json([
                 'status'    => true,

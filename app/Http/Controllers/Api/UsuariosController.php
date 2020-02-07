@@ -161,6 +161,14 @@ class UsuariosController extends Controller
 
                     $usuario->save();
 
+                    if($request->roles){
+                        $usuario->syncRoles($request->roles);
+                    }
+            
+                    if($request->permissions){
+                        $usuario->syncPermissions($request->permissions);
+                    }
+
                     return response()->json(['status' => true, 'message' => 'usuario_actualizado_com_succeso', 
                         'data' =>[ 
                                 'usuario' => User::where('id', $usuario->id)->with(['roles.permissions', 'permissions'])->get()
