@@ -139,8 +139,7 @@ class ViagensController extends Controller
             return response()->json([
                 'status' => true,
                 'data' => [
-                    'viagens' => $viagens->with(['motorista', 'usuario', 'van'])->groupBy(DB::raw('Date(created_at)'))->orderBy('created_at', 'ASC')
-                    ->get(array(DB::raw('Date(created_at) as data'), DB::raw('id, usuario_id, motorista_id')))
+                    'viagens' => $viagens->with(['motorista', 'usuario', 'van'])->get()
                 ],
             ]);
 

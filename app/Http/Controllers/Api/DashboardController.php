@@ -44,7 +44,7 @@ class DashboardController extends Controller
             $funcionario_viagens[$key] = ['nome'=>$funcionario->nome, 'qtd'=>$funcionario->viagens()->count()];
         }
 
-        dd($funcionario_viagens);
+        // dd($funcionario_viagens);
 
         try {
             
