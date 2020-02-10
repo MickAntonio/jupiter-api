@@ -46,7 +46,7 @@ class LoginController extends Controller
         $usuario = User::where('id', auth()->user()->id)->with(['funcionario.contactos','roles'])->first();
         // all good so return the token
         return response()->json(['status'=>$status, 'token_type'=>$token_type, 'token'=>$token, 
-        'expires_in'=>$expires_in, 'usuario'=>$usuario]);
+        'expires_in'=>$expires_in, 'usuario'=>$usuario, 'request'=>'login']);
         
     }
 
@@ -102,7 +102,8 @@ class LoginController extends Controller
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => $this->guard()->factory()->getTTL() * 60
+            'expires_in' => $this->guard()->factory()->getTTL() * 60,
+            'request'=>'refresh'
         ]);
     }
 
