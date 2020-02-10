@@ -123,6 +123,10 @@ class ViagensController extends Controller
 
                 $viagens->whereBetween('created_at', [$this->data_inicio, $this->data_fim]);
 
+            }else if(request('dataInicio') && !request('dataFim')){
+                $viagens->whereDate('created_at', '>=', date('Y-m-d', strtotime(request('dataInicio'))));
+            }else if(!request('dataInicio') && request('dataFim')){
+                $viagens->whereDate('created_at', '<=', date('Y-m-d', strtotime(request('dataFim'))));
             }
 
             if(request('data')){
