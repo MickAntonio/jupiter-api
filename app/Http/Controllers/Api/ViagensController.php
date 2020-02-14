@@ -139,7 +139,7 @@ class ViagensController extends Controller
             return response()->json([
                 'status' => true,
                 'data' => [
-                    'viagens' => $viagens->with(['motorista', 'usuario', 'van'])->get()
+                    'viagens' => $this->modificar_lista($viagens->with(['motorista', 'usuario', 'van'])->get())
                 ],
             ]);
 

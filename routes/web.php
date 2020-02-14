@@ -14,3 +14,6 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+// Email related routes
+Route::get('mail/send', 'MailController@send');

@@ -57,7 +57,7 @@ class LoginController extends Controller
      */
     public function me()
     {
-        $usuario    = User::where('id', auth()->user()->id)->with(['funcionario.contactos','roles'])->first();
+        $usuario    = User::where('id', auth()->user()->id)->with(['funcionario.contactos', 'funcionario.morada','roles'])->first();
         return response()->json($usuario);
     }
 

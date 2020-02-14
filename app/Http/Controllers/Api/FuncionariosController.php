@@ -64,7 +64,7 @@ class FuncionariosController extends Controller
             return response()->json([
                 'status'    => true,
                 'data'=>[
-                    'funcionarios' => $funcionarios->with(['usuario.roles', 'contactos', 'morada'])->orderBy('id', 'desc')->get()
+                    'funcionarios' => $funcionarios->with(['usuario.roles', 'contactos', 'morada.municipio.provincia'])->orderBy('id', 'desc')->get()
                 ]
             ]);
 
@@ -232,7 +232,7 @@ class FuncionariosController extends Controller
     {
         try {
 
-            $funcionario = Funcionarios::where('id', $id)->with(['usuario.roles', 'contactos', 'morada'])->get();
+            $funcionario = Funcionarios::where('id', $id)->with(['usuario.roles', 'contactos', 'morada.municipio.provincia'])->get();
 
             if($funcionario!=null){
                 return response()->json(['status' => true, 'data'=>['funcionario' => $funcionario]], 200);
@@ -281,11 +281,12 @@ class FuncionariosController extends Controller
         
                     if($usuario!=null){
 
+
                         $validator = Validator::make($request->usuario, [
                             'id' => 'required',
                             'name' => 'required',
                             'email' => 'required|email|unique:users,email,'.$request->usuario['id'],
-                            'password' => 'required',
+                            'password' => 'sometimes|min:6',
                         ]);
             
                         if($validator->fails()){
@@ -294,7 +295,11 @@ class FuncionariosController extends Controller
 
                             $usuario->name  = $request->usuario['name'];
                             $usuario->email = $request->usuario['email'];
-                            $usuario->password = bcrypt($request['password']);
+
+                            if(isset($request->usuario['password'])){
+                                $usuario->password = bcrypt($request->usuario['password']);
+                            }
+
                             $usuario->save();
 
                             if(isset($request->usuario['roles'])){
@@ -353,7 +358,13 @@ class FuncionariosController extends Controller
                 /**
                  * adiciona os contactos do funcionario
                  */
+
+                // remove todos os contactos deste funcionario e actualiza ou não para os recentes
+                FuncionarioContactos::where('funcionario_id', $funcionario->id)->delete();
+
                 if($request->contactos){
+
+
 
                     foreach ($request->contactos as $contacto) {
 
@@ -378,6 +389,7 @@ class FuncionariosController extends Controller
                             $funcionario_contacto->save();
                         }
                     }
+
                     
                 }
 

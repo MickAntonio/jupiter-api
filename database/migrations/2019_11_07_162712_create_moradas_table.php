@@ -15,10 +15,10 @@ class CreateMoradasTable extends Migration
     {
         Schema::create('moradas', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('rua');
-            $table->string('cidade');
-            $table->string('bairro');
-            $table->string('numero_casa');
+            $table->string('rua')->nullable();
+            $table->string('cidade')->nullable();
+            $table->string('bairro')->nullable();
+            $table->string('numero_casa')->nullable();
             $table->unsignedInteger('municipio_id');
             $table->unsignedInteger('funcionario_id');
             $table->timestamps();

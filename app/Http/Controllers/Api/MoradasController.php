@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use Validator;
 use App\Models\Moradas;
+use App\Models\Municipios;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -168,6 +169,31 @@ class MoradasController extends Controller
             
         } catch (\Throwable $th) {
             return response()->json(['message' => 'nao_foi_possivel_excluir_morada'], 500);
+        }
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function municipios($provincia=null)
+    {
+        try {
+
+            if(is_null($provincia)){
+                $municipios = Municipios::all();
+            }else{
+                $municipios = Municipios::where('provincia_id', $provincia)->orderBy('provincia_id', 'asc')->get();
+            }
+            
+            return response()->json([
+                'status'    => true,
+                'municipios'=> $municipios
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'nao_foi_possivel_trazer_municipios'], 500);
         }
     }
 }
