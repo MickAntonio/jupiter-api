@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Api;
 
-use Validator;
+use App\Http\Controllers\Controller;
 use App\Models\Moradas;
 use App\Models\Municipios;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use Validator;
 
 class MoradasController extends Controller
 {
@@ -15,8 +15,9 @@ class MoradasController extends Controller
      *
      */
 
-    public function __construct() {
-        $this->middleware('jwt-auth');
+    public function __construct()
+    {
+        $this->middleware('jwt-auth', ['except' => ['municipios']]);
     }
 
     /**
@@ -27,12 +28,12 @@ class MoradasController extends Controller
     public function index()
     {
         try {
-            
+
             return response()->json([
-                'status'    => true,
-                'data'=>[
-                    'moradas' => Moradas::all()
-                ]
+                'status' => true,
+                'data' => [
+                    'moradas' => Moradas::all(),
+                ],
             ]);
 
         } catch (\Exception $e) {
@@ -51,26 +52,26 @@ class MoradasController extends Controller
         try {
 
             $validator = Validator::make($request->all(), [
-                'rua'=>'sometimes',
-                'cidade'=>'sometimes',
-                'bairro'=>'sometimes',
-                'numero_casa'=>'sometimes',
-                'municipio_id'=>'required',
+                'rua' => 'sometimes',
+                'cidade' => 'sometimes',
+                'bairro' => 'sometimes',
+                'numero_casa' => 'sometimes',
+                'municipio_id' => 'required',
             ]);
 
-            if($validator->fails()){
+            if ($validator->fails()) {
                 return response()->json(['status' => 'fail', 'message' => $validator->errors()->all()]);
-            }else{
-                
+            } else {
+
                 $morada = new Moradas;
-                $morada->rua    = $request->rua;
+                $morada->rua = $request->rua;
                 $morada->bairro = $request->bairro;
                 $morada->numero_casa = $request->numero_casa;
-                $morada->municipio_id   = $request->municipio_id;
+                $morada->municipio_id = $request->municipio_id;
                 $morada->save();
 
-                return response()->json(['status' => true, 'message' => 'morada_adicionado_com_succeso', 
-                    'data'=>['morada' => $morada]
+                return response()->json(['status' => true, 'message' => 'morada_adicionado_com_succeso',
+                    'data' => ['morada' => $morada],
                 ], 200);
             }
 
@@ -90,10 +91,10 @@ class MoradasController extends Controller
         try {
 
             $morada = Moradas::find($id);
-        
-            if($morada!=null){
-                return response()->json(['status' => true, 'data'=>['morada' => $morada]], 200);
-            }else{
+
+            if ($morada != null) {
+                return response()->json(['status' => true, 'data' => ['morada' => $morada]], 200);
+            } else {
                 return response()->json(['message' => 'morada_nao_encontrado'], 200);
             }
 
@@ -114,35 +115,35 @@ class MoradasController extends Controller
         try {
 
             $validator = Validator::make($request->all(), [
-                'rua'=>'sometimes',
-                'cidade'=>'sometimes',
-                'bairro'=>'sometimes',
-                'numero_casa'=>'sometimes',
-                'municipio'=>'sometimes',
+                'rua' => 'sometimes',
+                'cidade' => 'sometimes',
+                'bairro' => 'sometimes',
+                'numero_casa' => 'sometimes',
+                'municipio' => 'sometimes',
             ]);
 
-            if($validator->fails()){
+            if ($validator->fails()) {
                 return response()->json(['status' => 'fail', 'message' => $validator->errors()->all()]);
-            }else{
+            } else {
 
                 $morada = Moradas::find($id);
-        
-                if($morada!=null){
-                
-                    $morada->rua    = $request->rua;
+
+                if ($morada != null) {
+
+                    $morada->rua = $request->rua;
                     $morada->cidade = $request->cidade;
                     $morada->bairro = $request->bairro;
                     $morada->numero_casa = $request->numero_casa;
-                    $morada->municipio   = $request->municipio;
+                    $morada->municipio = $request->municipio;
                     $morada->save();
 
-                    return response()->json(['status' => true, 'message' => 'morada_actualizada_com_succeso', 'data'=>['morada' => $morada]], 200);
+                    return response()->json(['status' => true, 'message' => 'morada_actualizada_com_succeso', 'data' => ['morada' => $morada]], 200);
 
-                }else{
+                } else {
                     return response()->json(['message' => 'morada_nao_encontrado'], 200);
                 }
             }
-            
+
         } catch (\Exception $e) {
             return response()->json(['message' => 'nao_foi_possivel_adicionar_morada'], 500);
         }
@@ -159,14 +160,14 @@ class MoradasController extends Controller
         try {
 
             $morada = Moradas::find($id);
-        
-            if($morada!=null){
+
+            if ($morada != null) {
                 $morada->delete();
                 return response()->json(['status' => true, 'message' => 'morada_excluido'], 200);
-            }else{
+            } else {
                 return response()->json(['message' => 'morada_nao_encontrada'], 200);
             }
-            
+
         } catch (\Throwable $th) {
             return response()->json(['message' => 'nao_foi_possivel_excluir_morada'], 500);
         }
@@ -177,23 +178,24 @@ class MoradasController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function municipios($provincia=null)
+    public function municipios($provincia = null)
     {
         try {
 
-            if(is_null($provincia)){
+            if (is_null($provincia)) {
                 $municipios = Municipios::all();
-            }else{
+            } else {
                 $municipios = Municipios::where('provincia_id', $provincia)->orderBy('provincia_id', 'asc')->get();
             }
-            
+
             return response()->json([
-                'status'    => true,
-                'municipios'=> $municipios
+                'status' => true,
+                'municipios' => $municipios,
             ]);
 
         } catch (\Exception $e) {
             return response()->json(['message' => 'nao_foi_possivel_trazer_municipios'], 500);
         }
     }
+
 }

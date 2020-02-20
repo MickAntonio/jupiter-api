@@ -184,3 +184,4 @@ Route::get('dashboard',         'Api\DashboardController@index');
 
 // JSON Lista de Municípios
 Route::get('/municipios/{provincia?}', 'Api\MoradasController@municipios');
+Route::get('/municipios-dois/{provincia?}', 'Api\MoradasController@municipios2');

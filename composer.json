@@ -17,6 +17,7 @@
         "laravel/tinker": "^1.0",
         "orangehill/iseed": "^2.6",
         "santigarcor/laratrust": "5.2.*",
+        "spatie/array-to-xml": "^2.11",
         "tymon/jwt-auth": "1.0.*",
         "zircote/swagger-php": "2.*"
     },
