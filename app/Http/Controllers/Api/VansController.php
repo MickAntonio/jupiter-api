@@ -241,6 +241,9 @@ class VansController extends Controller
                      * adiciona os contactos da van
                      */
 
+                     // remove todos os contactos deste van e actualiza ou não para os recentes
+                     VanContactos::where('van_id', $van->id)->delete();
+
                     if($request->contactos){
 
                         foreach ($request->contactos as $contacto) {
