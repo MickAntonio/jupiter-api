@@ -186,4 +186,4 @@ Route::get('dashboard',         'Api\DashboardController@index');
 Route::get('/municipios/{provincia?}', 'Api\MoradasController@municipios');
 Route::get('/municipios-dois/{provincia?}', 'Api\MoradasController@municipios2');
 
-Route::get('/municipios-modelo/{provincia?}', 'Api\MoradasController@municipios2');
+Route::get('/municipios-lista/{provincia?}', 'Api\MoradasController@municipios');
