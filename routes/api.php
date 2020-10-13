@@ -175,6 +175,15 @@ Route::delete('viagens/{id}', 'Api\ViagensController@destroy');
 Route::get('viagens/usuario/logado', 'Api\ViagensController@show_by_usuario');
 
 /**
+ * Boleias Routes
+ */
+Route::get('boleias',         'Api\BoleiasController@index');
+Route::post('boleias',        'Api\BoleiasController@store');
+Route::get('boleias/{id}',    'Api\BoleiasController@show');
+Route::put('boleias/{id}',    'Api\BoleiasController@update');
+Route::delete('boleias/{id}', 'Api\BoleiasController@destroy');
+
+/**
  * Enderecos Routes
  */
 Route::resource('enderecos',  'Api\EnderecosController', ['except'=>['create', 'edit']]);
